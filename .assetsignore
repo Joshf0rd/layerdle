@@ -3,6 +3,7 @@
 .gitignore
 .assetsignore
 README.md
+song-ideas.md
 process_songs.py
 add_songs.cmd
 incoming
