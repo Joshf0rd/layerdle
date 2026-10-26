@@ -47,6 +47,76 @@
         "songs/taio-cruz-break-your-heart/3.mp3",
         "songs/taio-cruz-break-your-heart/4.mp3"
       ]
+    },
+    {
+      "id": "b-o-b-airplanes",
+      "title": "Airplanes",
+      "artist": "B.o.B",
+      "year": null,
+      "start": 43.0,
+      "categories": [],
+      "clips": [
+        "songs/b-o-b-airplanes/1.mp3",
+        "songs/b-o-b-airplanes/2.mp3",
+        "songs/b-o-b-airplanes/3.mp3",
+        "songs/b-o-b-airplanes/4.mp3"
+      ]
+    },
+    {
+      "id": "bruno-mars-just-the-way-you-are",
+      "title": "Just The Way You Are",
+      "artist": "Bruno Mars",
+      "year": null,
+      "start": 151.0,
+      "categories": [],
+      "clips": [
+        "songs/bruno-mars-just-the-way-you-are/1.mp3",
+        "songs/bruno-mars-just-the-way-you-are/2.mp3",
+        "songs/bruno-mars-just-the-way-you-are/3.mp3",
+        "songs/bruno-mars-just-the-way-you-are/4.mp3"
+      ]
+    },
+    {
+      "id": "jay-z-empire-state-of-mind",
+      "title": "Empire State Of Mind",
+      "artist": "JAY-Z",
+      "year": null,
+      "start": 131.5,
+      "categories": [],
+      "clips": [
+        "songs/jay-z-empire-state-of-mind/1.mp3",
+        "songs/jay-z-empire-state-of-mind/2.mp3",
+        "songs/jay-z-empire-state-of-mind/3.mp3",
+        "songs/jay-z-empire-state-of-mind/4.mp3"
+      ]
+    },
+    {
+      "id": "ke-ha-tik-tok",
+      "title": "TiK ToK",
+      "artist": "Ke$ha",
+      "year": null,
+      "start": 53.0,
+      "categories": [],
+      "clips": [
+        "songs/ke-ha-tik-tok/1.mp3",
+        "songs/ke-ha-tik-tok/2.mp3",
+        "songs/ke-ha-tik-tok/3.mp3",
+        "songs/ke-ha-tik-tok/4.mp3"
+      ]
+    },
+    {
+      "id": "lady-gaga-bad-romance",
+      "title": "Bad Romance",
+      "artist": "Lady Gaga",
+      "year": null,
+      "start": 37.1,
+      "categories": [],
+      "clips": [
+        "songs/lady-gaga-bad-romance/1.mp3",
+        "songs/lady-gaga-bad-romance/2.mp3",
+        "songs/lady-gaga-bad-romance/3.mp3",
+        "songs/lady-gaga-bad-romance/4.mp3"
+      ]
     }
   ],
   "decoys": []
