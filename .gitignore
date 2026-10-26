@@ -2,8 +2,3 @@
 .claude/
 incoming/
 __pycache__/
-
-# Song library stays local until there are ~20 songs; the site plays the demo without it.
-# Delete these two lines to publish the songs.
-songs/
-songs.json
