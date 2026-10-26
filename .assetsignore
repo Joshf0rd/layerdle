@@ -1,0 +1,7 @@
+# Files Cloudflare should not serve on the website
+.git
+.gitignore
+.assetsignore
+README.md
+process_songs.py
+incoming
