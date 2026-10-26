@@ -1,0 +1,4 @@
+# Local-only files
+.claude/
+incoming/
+__pycache__/
