@@ -1,35 +1,33 @@
 # Layerdle
 
-Guess the song from its layers: drums, then bass, then the other instruments, then vocals.
+A party game for guessing songs layer by layer: drums, then bass, then the other instruments, then vocals.
+One phone runs the game and everyone shouts their guesses. Fewer layers means more points (5 → 1).
 
-Everything is static files, so it hosts free on GitHub Pages / Netlify like any other site.
-Once it's hosted, open the link in Safari, tap Share, then **Add to Home Screen**.
+Hosted on Cloudflare (auto-deploys on every push to `main`): https://layerdle.joshuajford7.workers.dev
+On iPhone: open it in Safari → Share → **Add to Home Screen**.
 
-Until `songs.json` has songs in it, the game runs in demo mode with public-domain tunes it synthesizes itself.
+## Playing offline (road trips)
 
-## Adding real songs
+On Wi-Fi, tap **⬇ Save** next to a category. Once it shows **✓ Offline** the app and those songs work with no signal.
+Use the home-screen icon: iOS keeps home-screen apps' saved data, but may clear a Safari tab's.
 
-One-time setup on your PC:
+## Adding songs
 
-1. Install Python 3 from python.org (tick "Add to PATH").
-2. Install ffmpeg: `winget install ffmpeg`
-3. `pip install demucs`
-
-Then for each batch of songs:
+One-time setup: Python 3.12, ffmpeg and Demucs (`pip install "torch<2.9" "torchaudio<2.9" demucs numpy soundfile`).
 
 1. Put audio files in `incoming/`, named `Artist - Title (Year).mp3`.
-   Leave the start time out and the script picks it: it finds where Apple Music's 30-second preview (usually the hook)
-   sits in your song, or else detects the chorus. To force a start, add `@1m05` to the name (clip starts at 1:05),
-   e.g. for songs whose intro is the famous part.
-2. Double-click `add_songs.cmd` (or run `python process_songs.py`). Roughly 1 minute per song on a CPU.
-3. Upload the new `songs/` folder and `songs.json`.
-
-Optional: add extra `"Title — Artist"` strings to `"decoys"` in `songs.json` so the autocomplete list doesn't give the answers away.
+   - **Categories:** put files in a subfolder instead, e.g. `incoming/2010s/` or `incoming/Disney/`.
+     To add an existing song to another category, drop the same file in that folder. It gets tagged, not re-processed.
+   - **Clip start:** picked automatically, by matching Apple Music's 30s preview (usually the hook) or else detecting
+     the chorus. To force it, add `@1m05` to the name (starts at 1:05).
+2. Double-click `add_songs.cmd`. Roughly 1–2 minutes per song.
+3. Commit and push `songs/` and `songs.json`.
 
 ## Files
 
 - `index.html` – the whole game
-- `songs.json` – your song library (the script fills it in)
+- `service-worker.js` – offline support
+- `songs.json` – song library (the script fills it in)
 - `songs/<id>/1-4.mp3` – cumulative clips (drums → full song)
-- `process_songs.py` – splits songs with Demucs and makes the clips
-- `manifest.json`, `icon-*.png` – home-screen app icon and name
+- `process_songs.py`, `add_songs.cmd` – split songs with Demucs and make the clips
+- `manifest.json`, `icon-*.png` – home-screen name and icon

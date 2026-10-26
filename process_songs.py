@@ -10,6 +10,10 @@ Without an @ time the script picks the start itself: it finds where Apple
 Music's 30s preview (usually the hook) sits in your file, and falls back to
 detecting the chorus (the loudest, most repeated section).
 
+Put files in a subfolder to give them a category, e.g. incoming/2010s/ or
+incoming/Disney/. A song can be in several: drop an already-processed song
+into another category folder and it just gets tagged, not re-processed.
+
 Then run:
 
     python process_songs.py
@@ -201,6 +205,17 @@ def auto_start(src, artist, title, length, tmp):
     return min(find_chorus(song, length), max(duration - length, 0)), f"chorus detection; {reason}"
 
 
+def find_inputs(indir):
+    """(file, category) pairs: files in incoming/ have no category, files in incoming/<Category>/ get that one."""
+    found = []
+    for p in sorted(indir.iterdir()):
+        if p.is_dir() and p.name.lower() != "done":
+            found += [(f, p.name) for f in sorted(p.iterdir()) if f.suffix.lower() in AUDIO_EXTS]
+        elif p.is_file() and p.suffix.lower() in AUDIO_EXTS:
+            found.append((p, None))
+    return found
+
+
 def fmt_time(secs):
     return f"{int(secs // 60)}:{int(secs % 60):02d}"
 
@@ -223,16 +238,23 @@ def main():
 
     indir = ROOT / args.indir
     indir.mkdir(exist_ok=True)
-    files = sorted(p for p in indir.iterdir() if p.suffix.lower() in AUDIO_EXTS)
+    files = find_inputs(indir)
     if not files:
         sys.exit(f"No audio files in {indir}. Name them like 'Artist - Title (Year).mp3'.")
 
     db_path = ROOT / "songs.json"
     db = json.loads(db_path.read_text(encoding="utf-8")) if db_path.exists() else {}
     db.setdefault("songs", [])
-    db.setdefault("decoys", [])
 
-    for src in files:
+    def save_db():
+        db_path.write_text(json.dumps(db, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    def move_done(src):
+        done = indir / "done"
+        done.mkdir(exist_ok=True)
+        src.replace(done / src.name)
+
+    for src, category in files:
         m = NAME_RE.match(src.stem)
         if not m:
             print(f"SKIP {src.name}: name it 'Artist - Title.mp3'")
@@ -240,8 +262,15 @@ def main():
         artist, title = m["artist"].strip(), m["title"].strip()
         song_id = slug(f"{artist} {title}")
         existing = next((s for s in db["songs"] if s["id"] == song_id), None)
+        categories = sorted(set((existing or {}).get("categories", [])) | ({category} if category else set()))
         if existing and not args.force:
-            print(f"SKIP {title}: already in songs.json (use --force to redo)")
+            if categories != existing.get("categories", []):
+                existing["categories"] = categories
+                save_db()
+                move_done(src)
+                print(f"TAGGED {title}: already processed, now in {', '.join(categories)}")
+            else:
+                print(f"SKIP {title}: already in songs.json (use --force to redo)")
             continue
 
         print(f"\n== {artist} - {title}")
@@ -269,18 +298,16 @@ def main():
             "artist": artist,
             "year": int(m["year"]) if m["year"] else None,
             "start": round(start, 1),
+            "categories": categories,
             "clips": [f"songs/{song_id}/{n}.mp3" for n in range(1, len(STEMS) + 1)],
         }
         if existing:
             db["songs"][db["songs"].index(existing)] = entry
         else:
             db["songs"].append(entry)
-        db_path.write_text(json.dumps(db, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
-        done = indir / "done"
-        done.mkdir(exist_ok=True)
-        shutil.move(str(src), str(done / src.name))
-        print(f"   added {title}")
+        save_db()
+        move_done(src)
+        print(f"   added {title}" + (f" to {', '.join(categories)}" if categories else ""))
 
     print(f"\nDone. songs.json now has {len(db['songs'])} songs.")
 

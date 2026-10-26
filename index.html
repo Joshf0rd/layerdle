@@ -23,8 +23,7 @@
     --accent: #ff5c8a;
     --accent-2: #7c5cff;
     --ok: #3ddc97;
-    --bad: #ff6b6b;
-    --skip: #6b6785;
+    --gold: #ffcc4d;
     --radius: 16px;
   }
   * { box-sizing: border-box; }
@@ -35,270 +34,218 @@
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
+    -webkit-user-select: none;
+    user-select: none;
   }
   button { font: inherit; color: inherit; cursor: pointer; }
+  input { -webkit-user-select: text; user-select: text; }
   [hidden] { display: none !important; }
 
   .app {
-    max-width: 480px;
+    max-width: 520px;
     min-height: 100dvh;
     margin: 0 auto;
-    padding: calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 20px);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    padding: calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 16px);
   }
+  .screen { display: flex; flex-direction: column; gap: 14px; min-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 30px); }
 
-  .top { display: flex; align-items: center; justify-content: space-between; }
-  .brand { text-align: center; }
-  .brand h1 {
-    margin: 0;
-    font-size: 26px;
-    letter-spacing: -0.5px;
+  h1 { margin: 0; font-size: 28px; letter-spacing: -0.5px; }
+  h2 { margin: 8px 0 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .grad {
     background: linear-gradient(90deg, var(--accent-2), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
-  .icon-btn {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    background: var(--panel);
-    font-size: 17px;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
 
-  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--panel); padding: 4px; border-radius: 12px; }
-  .tab { border: 0; background: transparent; padding: 8px; border-radius: 9px; color: var(--muted); font-weight: 600; font-size: 14px; }
-  .tab.on { background: var(--panel-2); color: var(--text); }
+  .hero { display: flex; align-items: center; gap: 12px; }
+  .hero img { width: 52px; height: 52px; border-radius: 13px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 2px 0 0; }
+
+  .note {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; font-size: 14px; color: var(--muted);
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 999px; padding: 8px 8px 8px 14px; font-weight: 600;
+  }
+  .chip button { border: 0; background: var(--line); width: 26px; height: 26px; border-radius: 50%; font-size: 13px; }
+  .add-row { display: flex; gap: 8px; }
+  .add-row input {
+    flex: 1; min-width: 0;
+    padding: 12px 14px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--text);
+    font-size: 16px; outline: none;
+  }
+  .add-row input:focus { border-color: var(--accent-2); }
+
+  .cats { display: flex; flex-direction: column; gap: 8px; }
+  .cat {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; text-align: left;
+    padding: 12px 12px 12px 14px;
+    border-radius: 14px; border: 2px solid transparent;
+    background: var(--panel);
+  }
+  .cat.on { border-color: var(--accent); background: var(--panel-2); }
+  .cat .name { flex: 1; }
+  .cat .name b { display: block; font-size: 16px; }
+  .cat .name span { font-size: 13px; color: var(--muted); }
+  .save {
+    border: 1px solid var(--line); background: var(--bg);
+    border-radius: 10px; padding: 7px 10px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  .save.done { color: var(--ok); border-color: transparent; background: transparent; }
+
+  .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: var(--panel); padding: 4px; border-radius: 12px; }
+  .seg button { border: 0; background: transparent; padding: 10px 4px; border-radius: 9px; color: var(--muted); font-weight: 700; }
+  .seg button.on { background: var(--panel-2); color: var(--text); }
+
+  .btn { border: 0; border-radius: 14px; padding: 14px; font-weight: 800; font-size: 16px; background: var(--panel-2); }
+  .btn.primary { background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .btn.ghost { background: var(--panel); border: 1px solid var(--line); }
+  .btn.big { padding: 20px; font-size: 19px; width: 100%; }
+  .btn.small { padding: 12px 16px; }
+  .btn:disabled { opacity: 0.4; }
+  .link { border: 0; background: transparent; color: var(--muted); font-size: 15px; padding: 8px; }
+  .push { margin-top: auto; }
+
+  /* Round */
+  .round-top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-weight: 600; }
+  .scorebar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  .scorebar span { flex: none; background: var(--panel); border-radius: 999px; padding: 6px 12px; font-size: 14px; }
+  .scorebar b { color: var(--gold); margin-left: 4px; }
 
   .layers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
   .layer {
     display: flex; align-items: center; gap: 10px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: var(--panel);
-    border: 1px solid transparent;
-    font-size: 15px;
+    padding: 11px 14px; border-radius: 12px;
+    background: var(--panel); border: 2px solid transparent; font-size: 16px;
   }
-  .layer .ic { width: 26px; text-align: center; font-size: 18px; }
-  .layer .nm { flex: 1; font-weight: 600; }
-  .layer .st { font-size: 13px; color: var(--muted); }
-  .layer.locked { opacity: 0.45; }
+  .layer .ic { width: 26px; text-align: center; font-size: 19px; }
+  .layer .nm { flex: 1; font-weight: 700; }
+  .layer .pt { font-size: 13px; color: var(--muted); }
+  .layer.locked { opacity: 0.35; }
   .layer.current { border-color: var(--accent); background: var(--panel-2); }
-  .layer.current .st { color: var(--accent); }
-  .layer.wrong .st { color: var(--bad); }
-  .layer.right { border-color: var(--ok); }
-  .layer.right .st { color: var(--ok); }
-  .layer.playable { cursor: pointer; }
+  .layer.current .pt { color: var(--gold); font-weight: 700; }
   .layer.playing { box-shadow: inset 0 0 0 2px var(--accent-2); }
 
-  .player { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 6px 0; }
+  .hint {
+    background: rgba(124, 92, 255, 0.14); border: 1px solid rgba(124, 92, 255, 0.45);
+    border-radius: 12px; padding: 12px 14px; font-size: 16px; text-align: center;
+  }
+  .answer { text-align: center; background: var(--panel); border-radius: var(--radius); padding: 16px; }
+  .answer .t { font-size: 24px; font-weight: 800; }
+  .answer .m { color: var(--muted); font-size: 16px; margin-top: 4px; }
+
+  .player { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0; }
   .play {
     --p: 0;
-    position: relative;
-    width: 92px; height: 92px;
-    border-radius: 50%;
-    border: 0;
-    padding: 0;
+    position: relative; width: 104px; height: 104px;
+    border-radius: 50%; border: 0; padding: 0;
     background: conic-gradient(var(--accent) calc(var(--p) * 1turn), var(--panel-2) 0);
     display: grid; place-items: center;
     box-shadow: 0 10px 30px rgba(255, 92, 138, 0.18);
   }
-  .play::before {
-    content: "";
-    position: absolute; inset: 6px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, var(--accent-2), var(--accent));
-  }
-  .play-icon { position: relative; font-size: 32px; line-height: 1; }
-  .play.loading .play-icon { animation: pulse 0.8s ease-in-out infinite alternate; }
+  .play::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: linear-gradient(145deg, var(--accent-2), var(--accent)); }
+  .play span { position: relative; font-size: 36px; line-height: 1; }
+  .play.loading span { animation: pulse 0.8s ease-in-out infinite alternate; }
   @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
-  .play-label { color: var(--muted); font-size: 14px; }
+  .play-label { color: var(--muted); font-size: 15px; }
 
-  .hint {
-    background: rgba(124, 92, 255, 0.12);
-    border: 1px solid rgba(124, 92, 255, 0.4);
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 14px;
-  }
+  .controls, .award { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .award p { margin: 0; text-align: center; font-weight: 800; font-size: 18px; }
+  .award-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .award-btns .btn { padding: 18px 10px; font-size: 17px; }
+  .award-btns .btn small { display: block; color: var(--gold); font-size: 14px; margin-top: 2px; }
+  .award-btns .nobody { grid-column: 1 / -1; background: var(--panel); color: var(--muted); }
 
-  .guesses { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-  .guesses li {
-    padding: 9px 12px;
-    border-radius: 10px;
-    background: var(--panel);
-    font-size: 14px;
-    display: flex; justify-content: space-between; gap: 10px;
-  }
-  .guesses li.wrong span:last-child { color: var(--bad); }
-  .guesses li.skip { color: var(--muted); }
-  .guesses li.right span:last-child { color: var(--ok); }
-
-  .guess-form { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
-  .field { position: relative; }
-  .field input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    background: var(--panel);
-    color: var(--text);
-    font-size: 16px; /* 16px stops iOS from zooming in */
-    outline: none;
-  }
-  .field input:focus { border-color: var(--accent-2); }
-  .suggest {
-    position: absolute; left: 0; right: 0; bottom: calc(100% + 6px);
-    list-style: none; margin: 0; padding: 4px;
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    max-height: 260px; overflow-y: auto;
-    z-index: 5;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
-  }
-  .suggest button {
-    width: 100%; text-align: left;
-    border: 0; background: transparent;
-    padding: 10px; border-radius: 8px;
-    font-size: 15px;
-  }
-  .suggest button:active, .suggest button:hover { background: var(--line); }
-  .suggest small { color: var(--muted); }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .btn { border: 0; border-radius: 12px; padding: 13px; font-weight: 700; font-size: 15px; }
-  .btn.primary { background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
-  .btn.ghost { background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
-
-  .result {
-    margin-top: auto;
-    background: var(--panel);
-    border-radius: var(--radius);
-    padding: 16px;
-    text-align: center;
-    display: flex; flex-direction: column; gap: 10px;
-  }
-  .result .msg { font-size: 20px; font-weight: 800; }
-  .result .song { font-size: 17px; font-weight: 700; }
-  .result .meta { color: var(--muted); font-size: 14px; }
-  .result .emoji { font-size: 22px; letter-spacing: 2px; }
-  .countdown { color: var(--muted); font-size: 13px; }
-
-  .demo-note { color: var(--muted); font-size: 12px; text-align: center; margin: 0; }
-
-  .overlay {
-    position: fixed; inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: grid; place-items: center;
-    padding: 16px;
-    z-index: 20;
-  }
-  .modal {
-    width: 100%; max-width: 420px;
-    background: var(--panel);
-    border-radius: var(--radius);
-    padding: 18px;
-    position: relative;
-    max-height: 85dvh; overflow-y: auto;
-  }
-  .modal h2 { margin: 0 0 12px; font-size: 20px; }
-  .modal p, .modal li { color: var(--muted); font-size: 15px; line-height: 1.45; }
-  .modal .close { position: absolute; top: 12px; right: 12px; }
-  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; margin-bottom: 16px; }
-  .stat-grid b { display: block; font-size: 24px; }
-  .stat-grid span { font-size: 11px; color: var(--muted); }
-  .dist { display: flex; flex-direction: column; gap: 5px; }
-  .dist div { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-  .dist .bar { background: var(--accent-2); border-radius: 4px; padding: 2px 6px; min-width: 22px; text-align: right; font-weight: 700; }
+  /* End */
+  .trophy { text-align: center; font-size: 64px; margin-top: 20px; }
+  .end-title { text-align: center; font-size: 30px; }
+  .standings { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .standings li { display: flex; align-items: center; gap: 12px; background: var(--panel); border-radius: 14px; padding: 14px 16px; font-size: 18px; font-weight: 700; }
+  .standings li .pts { margin-left: auto; color: var(--gold); }
+  .standings li:first-child { background: var(--panel-2); border: 2px solid var(--gold); }
 
   .toast {
     position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 24px);
     transform: translateX(-50%);
     background: var(--text); color: var(--bg);
     padding: 10px 16px; border-radius: 999px;
-    font-weight: 600; font-size: 14px;
-    z-index: 30;
+    font-weight: 700; font-size: 15px; z-index: 30; white-space: nowrap;
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="top">
-    <button class="icon-btn" id="help-btn" aria-label="How to play">?</button>
-    <div class="brand">
-      <h1>Layerdle</h1>
-      <div id="subtitle" class="sub"></div>
-    </div>
-    <button class="icon-btn" id="stats-btn" aria-label="Stats">📊</button>
-  </header>
 
-  <nav class="tabs">
-    <button id="mode-daily" class="tab">Daily</button>
-    <button id="mode-free" class="tab">Free play</button>
-  </nav>
+  <!-- Setup -->
+  <section id="setup" class="screen">
+    <header class="hero">
+      <img src="icon-180.png" alt="">
+      <div>
+        <h1 class="grad">Layerdle</h1>
+        <p class="sub">Party mode · guess the song layer by layer</p>
+      </div>
+    </header>
 
-  <ol id="layers" class="layers"></ol>
+    <div id="net" class="note" hidden>📴 You're offline. Only songs saved for offline will play.</div>
+    <div id="empty" class="note" hidden>No songs yet. Add some with add_songs.cmd and push them.</div>
 
-  <div class="player">
-    <button id="play" class="play" aria-label="Play clip"><span id="play-icon" class="play-icon">▶</span></button>
-    <div id="play-label" class="play-label"></div>
-  </div>
+    <h2>Players or teams</h2>
+    <div id="players" class="chips"></div>
+    <form id="add-player" class="add-row" autocomplete="off">
+      <input id="player-name" placeholder="Add a name" maxlength="20" autocomplete="off" autocorrect="off" enterkeyhint="done">
+      <button class="btn small">Add</button>
+    </form>
 
-  <div id="hint" class="hint" hidden></div>
+    <h2>Category</h2>
+    <div id="cats" class="cats"></div>
 
-  <ul id="guesses" class="guesses"></ul>
+    <h2>Songs per game</h2>
+    <div id="rounds" class="seg"></div>
 
-  <form id="guess-form" class="guess-form" autocomplete="off">
-    <div class="field">
-      <input id="guess" type="text" placeholder="Search for a song…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
-      <ul id="suggest" class="suggest" hidden></ul>
-    </div>
-    <div class="row">
-      <button type="button" id="skip" class="btn ghost">Skip</button>
-      <button type="submit" class="btn primary">Guess</button>
-    </div>
-  </form>
-
-  <section id="result" class="result" hidden>
-    <div id="result-msg" class="msg"></div>
-    <div id="result-emoji" class="emoji"></div>
-    <div>
-      <div id="result-song" class="song"></div>
-      <div id="result-meta" class="meta"></div>
-    </div>
-    <div class="row">
-      <button id="share" class="btn primary">Share</button>
-      <button id="again" class="btn ghost">Free play</button>
-    </div>
-    <div id="countdown" class="countdown"></div>
+    <button id="start" class="btn primary big push">Start game</button>
   </section>
 
-  <p id="demo-note" class="demo-note" hidden>Demo mode: public-domain tunes synthesized in your browser. Run process_songs.py to add real songs.</p>
-</div>
+  <!-- Round -->
+  <section id="round" class="screen" hidden>
+    <div class="round-top">
+      <button id="quit" class="link">✕ End game</button>
+      <span id="round-count"></span>
+    </div>
+    <div id="scorebar" class="scorebar"></div>
+    <ol id="layers" class="layers"></ol>
+    <div id="hint" class="hint" hidden></div>
+    <div id="answer" class="answer" hidden><div class="t"></div><div class="m"></div></div>
+    <div class="player">
+      <button id="play" class="play" aria-label="Play"><span id="play-icon">▶</span></button>
+      <div id="play-label" class="play-label"></div>
+    </div>
+    <div id="controls" class="controls">
+      <button id="next" class="btn big">Next layer</button>
+      <button id="reveal" class="btn primary big">Reveal answer</button>
+      <button id="skip-song" class="link">Skip this song</button>
+    </div>
+    <div id="award" class="award" hidden>
+      <p>Who got it?</p>
+      <div id="award-btns" class="award-btns"></div>
+    </div>
+  </section>
 
-<div id="help" class="overlay" hidden>
-  <div class="modal">
-    <button class="icon-btn close" data-close aria-label="Close">✕</button>
-    <h2>How to play</h2>
-    <ol>
-      <li>Tap ▶ to hear the first layer: <b>drums only</b>.</li>
-      <li>Guess the song, or skip. Each wrong guess or skip adds a layer: bass, then the other instruments, then vocals.</li>
-      <li>The last try gives you a hint (year and the artist's first letter).</li>
-      <li>Fewer layers = better score. There's a new daily song every midnight.</li>
-    </ol>
-    <p>Tap any unlocked layer to replay it. If you hear nothing on iPhone, check your volume.</p>
-  </div>
-</div>
-
-<div id="stats" class="overlay" hidden>
-  <div class="modal">
-    <button class="icon-btn close" data-close aria-label="Close">✕</button>
-    <h2>Statistics</h2>
-    <div id="stats-body"></div>
-  </div>
+  <!-- End -->
+  <section id="end" class="screen" hidden>
+    <div class="trophy">🏆</div>
+    <h1 id="winner" class="end-title"></h1>
+    <ol id="standings" class="standings"></ol>
+    <div class="controls">
+      <button id="again" class="btn primary big">Play again</button>
+      <button id="home" class="btn ghost big">Change setup</button>
+    </div>
+  </section>
 </div>
 
 <div id="toast" class="toast" hidden></div>
@@ -307,271 +254,167 @@
 (() => {
   'use strict';
   const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  /* ---------- Demo songs: public-domain tunes rendered with Web Audio ---------- */
-  // melody: notes as Name+Octave[:beats], R = rest, | is only for readability.
-  // chords: one group per bar; Sym[:beats] splits a bar.
-  const DEMO_SONGS = [
-    { id: 'ode-to-joy', title: 'Ode to Joy', artist: 'Ludwig van Beethoven', year: 1824, bpm: 118, bpb: 4,
-      melody: 'E5 E5 F5 G5 | G5 F5 E5 D5 | C5 C5 D5 E5 | E5:1.5 D5:0.5 D5:2 | E5 E5 F5 G5 | G5 F5 E5 D5 | C5 C5 D5 E5 | D5:1.5 C5:0.5 C5:2',
-      chords: 'C | G | C | G | C | G | C | G:2 C:2' },
-    { id: 'twinkle', title: 'Twinkle Twinkle Little Star', artist: 'Traditional', year: 1806, bpm: 104, bpb: 4,
-      melody: 'C5 C5 G5 G5 | A5 A5 G5:2 | F5 F5 E5 E5 | D5 D5 C5:2 | G5 G5 F5 F5 | E5 E5 D5:2 | G5 G5 F5 F5 | E5 E5 D5:2',
-      chords: 'C | F:2 C:2 | F:2 C:2 | G:2 C:2 | C:2 F:2 | C:2 G:2 | C:2 F:2 | C:2 G:2' },
-    { id: 'happy-birthday', title: 'Happy Birthday to You', artist: 'Patty & Mildred Hill', year: 1893, bpm: 96, bpb: 3,
-      melody: 'R:2 G4:0.75 G4:0.25 | A4 G4 C5 | B4:2 G4:0.75 G4:0.25 | A4 G4 D5 | C5:2 G4:0.75 G4:0.25 | G5 E5 C5 | B4 A4 F5:0.75 F5:0.25 | E5 C5 D5 | C5:3',
-      chords: 'C | C | G | G | C | C7 | F | C:2 G:1 | C' },
-    { id: 'jingle-bells', title: 'Jingle Bells', artist: 'James Lord Pierpont', year: 1857, bpm: 150, bpb: 4,
-      melody: 'E5 E5 E5:2 | E5 E5 E5:2 | E5 G5 C5:1.5 D5:0.5 | E5:4 | F5 F5 F5:1.5 F5:0.5 | F5 E5 E5 E5:0.5 E5:0.5 | E5 D5 D5 E5 | D5:2 G5:2',
-      chords: 'C | C | C | C | F | C | D7 | G' },
-    { id: 'saints', title: 'When the Saints Go Marching In', artist: 'Traditional', year: 1896, bpm: 132, bpb: 4,
-      melody: 'R C5 E5 F5 | G5:4 | R C5 E5 F5 | G5:4 | R C5 E5 F5 | G5:2 E5:2 | C5:2 E5:2 | D5:4',
-      chords: 'C | C | C | C | C | C | C | G' },
-    { id: 'frere-jacques', title: 'Frère Jacques', artist: 'Traditional', year: 1780, bpm: 112, bpb: 4,
-      melody: 'C5 D5 E5 C5 | C5 D5 E5 C5 | E5 F5 G5:2 | E5 F5 G5:2 | G5:0.5 A5:0.5 G5:0.5 F5:0.5 E5 C5 | G5:0.5 A5:0.5 G5:0.5 F5:0.5 E5 C5 | C5 G4 C5:2 | C5 G4 C5:2',
-      chords: 'C | C | C | C | C | C | C:1 G:1 C:2 | C:1 G:1 C:2' },
-    { id: 'yankee-doodle', title: 'Yankee Doodle', artist: 'Traditional', year: 1775, bpm: 140, bpb: 4,
-      melody: 'C5 C5 D5 E5 | C5 E5 D5 G4 | C5 C5 D5 E5 | C5:2 B4:2 | C5 C5 D5 E5 | F5 E5 D5 C5 | B4 G4 A4 B4 | C5:2 C5:2',
-      chords: 'C | C:2 G:2 | C | G | C | F:2 C:2 | G | C' },
-    { id: 'amazing-grace', title: 'Amazing Grace', artist: 'John Newton', year: 1779, bpm: 88, bpb: 3,
-      melody: 'R:2 G4 | C5:2 E5:0.5 C5:0.5 | E5:2 D5 | C5:2 A4 | G4:2 G4 | C5:2 E5:0.5 C5:0.5 | E5:2 D5 | G5:3',
-      chords: 'C | C | C | F | C | C | C | G' },
-  ].map(s => ({ ...s, synth: true }));
+  const STAGES = [['🥁', 'Drums'], ['🎸', '+ Bass'], ['🎹', '+ Instruments'], ['🎤', '+ Vocals']];
+  const POINTS = [5, 4, 3, 2, 1]; // per layer; the last one is the hint
+  const ROUND_OPTIONS = [5, 10, 20, 'all'];
+  const CLIP_CACHE = 'layerdle-clips';
 
-  const DEMO_DECOYS = [
-    'Mary Had a Little Lamb — Traditional', 'Row, Row, Row Your Boat — Traditional', 'Für Elise — Ludwig van Beethoven',
-    'Greensleeves — Traditional', 'London Bridge Is Falling Down — Traditional', 'Old MacDonald Had a Farm — Traditional',
-    'Silent Night — Franz Xaver Gruber', 'Auld Lang Syne — Traditional', 'Camptown Races — Stephen Foster',
-    'Oh! Susanna — Stephen Foster', 'The Entertainer — Scott Joplin', 'Canon in D — Johann Pachelbel',
-    'Brahms\' Lullaby — Johannes Brahms', 'In the Hall of the Mountain King — Edvard Grieg', 'William Tell Overture — Gioachino Rossini',
-    'Swing Low, Sweet Chariot — Traditional', 'Deck the Halls — Traditional', 'Home on the Range — Traditional',
-  ];
-
-  const STAGE_META = [['🥁', 'Drums'], ['🎸', '+ Bass'], ['🎹', '+ Instruments'], ['🎤', '+ Vocals']];
-
-  /* ---------- Storage (per device, never required) ---------- */
-  const KEY = 'layerdle:v1';
-  let store;
-  try { store = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { store = {}; }
-  store.days = store.days || {};
-  store.stats = store.stats || { played: 0, wins: 0, streak: 0, max: 0, dist: [0, 0, 0, 0, 0, 0], lastDay: null, lastWon: false };
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
-
-  /* ---------- Helpers ---------- */
-  const normalize = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
-    .replace(/\(.*?\)|\[.*?\]/g, '').replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '');
-  const titleOf = label => label.split(' — ')[0];
-  const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-  const DAY0 = Date.UTC(2026, 0, 1);
-  function todayIndex() {
-    const d = new Date();
-    return Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - DAY0) / 864e5);
-  }
-  function mulberry32(a) {
-    return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-  }
-  function dailySong(day) {
-    const n = LIB.songs.length, rand = mulberry32(1337), order = [...Array(n).keys()];
-    for (let i = n - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
-    return LIB.songs[order[((day % n) + n) % n]];
-  }
-  const nClips = song => song.synth ? 4 : song.clips.length;
-  const nStages = song => nClips(song) + 1; // last stage = full song + hint
-  function stageMeta(song, i) {
-    const n = nClips(song);
-    if (i >= n) return ['💡', 'Hint'];
-    if (n === 4) return STAGE_META[i];
-    return i === n - 1 ? ['🎤', 'Full song'] : ['🎵', 'Layer ' + (i + 1)];
-  }
+  /* ---------- Settings (per device) ---------- */
+  const KEY = 'layerdle:party';
+  let prefs;
+  try { prefs = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { prefs = {}; }
+  prefs.players = prefs.players || ['Team 1', 'Team 2'];
+  prefs.category = prefs.category || 'All songs';
+  prefs.rounds = prefs.rounds || 10;
+  prefs.played = prefs.played || [];
+  const savePrefs = () => { try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) {} };
 
   function toast(msg) {
     const t = $('#toast');
     t.textContent = msg; t.hidden = false;
     clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => { t.hidden = true; }, 1800);
+    toast.timer = setTimeout(() => { t.hidden = true; }, 2000);
+  }
+  function show(id) {
+    ['setup', 'round', 'end'].forEach(s => { $('#' + s).hidden = s !== id; });
+    window.scrollTo(0, 0);
+  }
+  function shuffle(a) {
+    a = a.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
   }
 
-  /* ---------- Synth (demo songs) ---------- */
-  const NOTE = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
-  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
-  function midi(name) {
-    const m = name.match(/^([A-G])([#b]?)(\d)$/);
-    return NOTE[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + 12 * (+m[3] + 1);
+  /* ---------- Song library ---------- */
+  let SONGS = [];
+  async function loadLibrary() {
+    try {
+      const r = await fetch('songs.json', { cache: 'no-cache' });
+      if (r.ok) SONGS = ((await r.json()).songs || []).filter(s => s.clips && s.clips.length);
+    } catch (e) {}
   }
-  const parseSeq = str => str.trim().split(/\s+/).filter(t => t !== '|').map(t => {
-    const [n, d] = t.split(':');
-    return { n, d: d ? parseFloat(d) : 1 };
-  });
-  function parseChords(str, bpb) {
-    const out = [];
-    str.split('|').forEach((bar, i) => {
-      const toks = bar.trim().split(/\s+/).filter(Boolean);
-      let b = i * bpb;
-      toks.forEach(tok => {
-        const [sym, d] = tok.split(':');
-        const len = d ? parseFloat(d) : bpb / toks.length;
-        const m = sym.match(/^([A-G])([#b]?)(m?)(7?)$/);
-        const root = (NOTE[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + 12) % 12;
-        const tones = [0, m[3] ? 3 : 4, 7];
-        if (m[4]) tones.push(10);
-        out.push({ start: b, len, root, tones });
-        b += len;
-      });
-    });
-    return out;
+  function categories() {
+    const map = new Map();
+    SONGS.forEach(s => (s.categories || []).forEach(c => {
+      if (!map.has(c)) map.set(c, []);
+      map.get(c).push(s);
+    }));
+    return [['All songs', SONGS], ...[...map].sort((a, b) => a[0].localeCompare(b[0]))];
   }
+  const poolFor = name => (categories().find(([n]) => n === name) || ['All songs', SONGS])[1];
 
-  function makeNoise(oc) {
-    const b = oc.createBuffer(1, oc.sampleRate, oc.sampleRate), d = b.getChannelData(0);
-    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    return b;
-  }
-  function envelope(g, t, attack, peak, hold, release) {
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(peak, t + attack);
-    g.gain.setValueAtTime(peak, t + attack + Math.max(0, hold));
-    g.gain.linearRampToValueAtTime(0, t + attack + Math.max(0, hold) + release);
-  }
-  function kick(oc, out, t) {
-    const o = oc.createOscillator(), g = oc.createGain();
-    o.frequency.setValueAtTime(150, t);
-    o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
-    g.gain.setValueAtTime(1, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-    o.connect(g).connect(out);
-    o.start(t); o.stop(t + 0.4);
-  }
-  function snare(oc, out, noise, t, v) {
-    const s = oc.createBufferSource(), f = oc.createBiquadFilter(), g = oc.createGain();
-    s.buffer = noise; f.type = 'highpass'; f.frequency.value = 1500;
-    g.gain.setValueAtTime(0.5 * v, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-    s.connect(f).connect(g).connect(out);
-    s.start(t, Math.random() * 0.5); s.stop(t + 0.2);
-    const o = oc.createOscillator(), g2 = oc.createGain();
-    o.type = 'triangle'; o.frequency.setValueAtTime(200, t);
-    g2.gain.setValueAtTime(0.4 * v, t);
-    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-    o.connect(g2).connect(out);
-    o.start(t); o.stop(t + 0.12);
-  }
-  function hat(oc, out, noise, t, v) {
-    const s = oc.createBufferSource(), f = oc.createBiquadFilter(), g = oc.createGain();
-    s.buffer = noise; f.type = 'highpass'; f.frequency.value = 7000;
-    g.gain.setValueAtTime(v, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-    s.connect(f).connect(g).connect(out);
-    s.start(t, Math.random() * 0.5); s.stop(t + 0.06);
-  }
-  function tone(oc, out, type, freq, t, len, peak, cutoff) {
-    const o = oc.createOscillator(), f = oc.createBiquadFilter(), g = oc.createGain();
-    o.type = type; o.frequency.value = freq;
-    f.type = 'lowpass'; f.frequency.value = cutoff;
-    envelope(g, t, 0.01, peak, len - 0.06, 0.05);
-    o.connect(f).connect(g).connect(out);
-    o.start(t); o.stop(t + len + 0.05);
-  }
+  /* ---------- Offline clips ---------- */
+  const canCache = 'caches' in window;
+  const abs = u => new URL(u, location.href).href;
+  let cached = new Set();
+  const downloads = new Map(); // category -> progress 0..1
+  const songSaved = s => s.clips.every(u => cached.has(abs(u)));
 
-  // layer: 0 drums, 1 bass, 2 chords, 3 melody
-  function renderLayer(song, layer, sr) {
-    const spb = 60 / song.bpm, bpb = song.bpb || 4;
-    const mel = parseSeq(song.melody);
-    const beats = mel.reduce((a, n) => a + n.d, 0);
-    const oc = new OfflineAudioContext(1, Math.ceil((beats * spb + 1.2) * sr), sr);
-    const out = oc.createGain();
-    out.connect(oc.destination);
-    const T = b => 0.05 + b * spb;
-    const chords = parseChords(song.chords, bpb).filter(c => c.start < beats);
-
-    if (layer === 0) {
-      out.gain.value = 0.7;
-      const noise = makeNoise(oc);
-      for (let i = 0; i < beats * 2; i++) {
-        const b = i / 2, p = b % bpb;
-        if (bpb === 3) {
-          if (p === 0) kick(oc, out, T(b));
-          if (p === 1 || p === 2) snare(oc, out, noise, T(b), 0.55);
-        } else {
-          if (p === 0 || p === 2 || p === 2.5) kick(oc, out, T(b));
-          if (p === 1 || p === 3) snare(oc, out, noise, T(b), 1);
-        }
-        hat(oc, out, noise, T(b), p % 1 ? 0.12 : 0.22);
+  async function refreshCached() {
+    if (!canCache) return;
+    try { cached = new Set((await (await caches.open(CLIP_CACHE)).keys()).map(r => r.url)); } catch (e) {}
+  }
+  async function saveOffline(name) {
+    if (downloads.has(name)) return;
+    if (!navigator.onLine) { toast('Connect to the internet to download'); return; }
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+    const cache = await caches.open(CLIP_CACHE);
+    const urls = [...new Set(poolFor(name).flatMap(s => s.clips.map(abs)))].filter(u => !cached.has(u));
+    const total = urls.length || 1;
+    let done = 0, failed = 0;
+    downloads.set(name, 0);
+    renderCats();
+    const worker = async () => {
+      while (urls.length) {
+        const u = urls.shift();
+        try {
+          const r = await fetch(u, { cache: 'no-store' });
+          if (!r.ok) throw new Error(r.status);
+          await cache.put(u, r);
+          cached.add(u);
+        } catch (e) { failed++; }
+        downloads.set(name, ++done / total);
+        renderCats();
       }
-    } else if (layer === 1) {
-      out.gain.value = 0.6;
-      chords.forEach(c => {
-        for (let b = c.start; b < c.start + c.len && b < beats; b++) {
-          const fifth = bpb === 4 && b % bpb === 2 ? 7 : 0;
-          tone(oc, out, 'sawtooth', hz(36 + c.root + fifth), T(b), spb * 0.85, 0.5, 520);
-        }
-      });
-    } else if (layer === 2) {
-      out.gain.value = 0.8;
-      chords.forEach(c => {
-        const len = Math.min(c.len, beats - c.start) * spb;
-        c.tones.forEach(iv => {
-          const m = 60 + (c.root + iv) % 12;
-          tone(oc, out, 'triangle', hz(m), T(c.start), len, 0.07, 1800);
-          for (let b = c.start + 0.5; b < c.start + c.len && b < beats; b++) {
-            tone(oc, out, 'square', hz(m), T(b), spb * 0.25, 0.04, 1400);
-          }
-        });
-      });
-    } else {
-      out.gain.value = 0.7;
-      let b = 0;
-      mel.forEach(n => {
-        if (n.n !== 'R') {
-          const f = hz(midi(n.n)), t = T(b), len = n.d * spb * 0.9;
-          const o = oc.createOscillator(), o2 = oc.createOscillator(), g = oc.createGain(), g2 = oc.createGain();
-          const lfo = oc.createOscillator(), depth = oc.createGain();
-          o.type = 'sine'; o2.type = 'triangle';
-          o.frequency.value = f; o2.frequency.value = f;
-          lfo.frequency.value = 5.5; depth.gain.value = f * 0.007;
-          lfo.connect(depth); depth.connect(o.frequency); depth.connect(o2.frequency);
-          g2.gain.value = 0.3;
-          o.connect(g); o2.connect(g2).connect(g); g.connect(out);
-          envelope(g, t, 0.03, 0.35, len - 0.1, 0.07);
-          [o, o2, lfo].forEach(x => { x.start(t); x.stop(t + len + 0.1); });
-        }
-        b += n.d;
-      });
-    }
-    return oc.startRendering();
+    };
+    await Promise.all([1, 2, 3, 4].map(worker));
+    downloads.delete(name);
+    renderCats();
+    toast(failed ? `${failed} clips failed. Tap again to retry` : `${name} saved for offline`);
   }
 
-  const synthCache = new Map();
-  function synthStages(song) {
-    if (!synthCache.has(song.id)) {
-      synthCache.set(song.id, Promise.all([0, 1, 2, 3].map(l => renderLayer(song, l, 22050))).then(layers => {
-        const len = layers[0].length, acc = new Float32Array(len), stages = [];
-        layers.forEach(layer => {
-          const d = layer.getChannelData(0);
-          let peak = 0;
-          for (let i = 0; i < len; i++) { acc[i] += d[i]; peak = Math.max(peak, Math.abs(acc[i])); }
-          const gain = peak > 0.95 ? 0.95 / peak : 1;
-          const buf = ensureCtx().createBuffer(1, len, 22050), out = buf.getChannelData(0);
-          for (let i = 0; i < len; i++) out[i] = acc[i] * gain;
-          stages.push(buf);
-        });
-        return stages;
-      }));
-    }
-    return synthCache.get(song.id);
+  /* ---------- Setup screen ---------- */
+  function renderPlayers() {
+    $('#players').innerHTML = prefs.players.map((p, i) =>
+      `<span class="chip">${esc(p)}<button data-i="${i}" aria-label="Remove ${esc(p)}">✕</button></span>`).join('');
+  }
+  function renderCats() {
+    $('#cats').innerHTML = categories().map(([name, songs]) => {
+      const saved = songs.filter(songSaved).length;
+      let btn = '';
+      if (canCache && songs.length) {
+        if (downloads.has(name)) btn = `<span class="save">${Math.round(downloads.get(name) * 100)}%</span>`;
+        else if (saved === songs.length) btn = `<span class="save done">✓ Offline</span>`;
+        else btn = `<span class="save" data-save="${esc(name)}">⬇ Save${saved ? ` (${saved}/${songs.length})` : ''}</span>`;
+      }
+      return `<button class="cat${name === prefs.category ? ' on' : ''}" data-cat="${esc(name)}">
+        <span class="name"><b>${esc(name)}</b><span>${songs.length} song${songs.length === 1 ? '' : 's'}</span></span>${btn}</button>`;
+    }).join('');
+  }
+  function renderRounds() {
+    $('#rounds').innerHTML = ROUND_OPTIONS.map(r =>
+      `<button data-r="${r}" class="${String(r) === String(prefs.rounds) ? 'on' : ''}">${r === 'all' ? 'All' : r}</button>`).join('');
+  }
+  function renderSetup() {
+    if (!poolFor(prefs.category).length || !categories().some(([n]) => n === prefs.category)) prefs.category = 'All songs';
+    renderPlayers(); renderCats(); renderRounds();
+    $('#net').hidden = navigator.onLine;
+    $('#empty').hidden = SONGS.length > 0;
   }
 
-  /* ---------- Audio playback ---------- */
+  $('#add-player').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = $('#player-name').value.trim();
+    if (!name) return;
+    if (prefs.players.some(p => p.toLowerCase() === name.toLowerCase())) { toast('That name is taken'); return; }
+    prefs.players.push(name);
+    $('#player-name').value = '';
+    savePrefs(); renderPlayers();
+  });
+  $('#players').addEventListener('click', e => {
+    const b = e.target.closest('button[data-i]');
+    if (!b) return;
+    prefs.players.splice(+b.dataset.i, 1);
+    savePrefs(); renderPlayers();
+  });
+  $('#cats').addEventListener('click', e => {
+    const save = e.target.closest('[data-save]');
+    if (save) { saveOffline(save.dataset.save); return; }
+    const cat = e.target.closest('[data-cat]');
+    if (cat) { prefs.category = cat.dataset.cat; savePrefs(); renderCats(); }
+  });
+  $('#rounds').addEventListener('click', e => {
+    const b = e.target.closest('button[data-r]');
+    if (!b) return;
+    prefs.rounds = b.dataset.r === 'all' ? 'all' : +b.dataset.r;
+    savePrefs(); renderRounds();
+  });
+  window.addEventListener('online', renderSetup);
+  window.addEventListener('offline', renderSetup);
+
+  /* ---------- Audio ---------- */
   let ctx = null, unlocked = false, playing = null, pending = null, raf = 0;
   function ensureCtx() {
     if (!ctx) {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
-      // Lets audio play even when the iPhone's silent switch is on (Safari 17+).
+      // Play even when the iPhone's silent switch is on (Safari 17+).
       try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
     }
     return ctx;
   }
-  // Call synchronously inside a tap so iOS unlocks audio.
+  // Must run synchronously inside a tap so iOS allows audio.
   function unlockCtx() {
     const c = ensureCtx();
     if (c.state !== 'running') c.resume();
@@ -585,25 +428,21 @@
   }
 
   const clipCache = new Map();
-  function loadClip(song, i) {
-    const key = song.id + '#' + i;
-    if (!clipCache.has(key)) {
-      const p = song.synth
-        ? synthStages(song).then(stages => stages[i])
-        : fetch(song.clips[i])
-            .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
-            .then(ab => new Promise((res, rej) => ensureCtx().decodeAudioData(ab, res, rej)));
-      p.catch(() => clipCache.delete(key));
-      clipCache.set(key, p);
+  function loadClip(url) {
+    if (!clipCache.has(url)) {
+      const p = fetch(url)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+        .then(ab => new Promise((res, rej) => ensureCtx().decodeAudioData(ab, res, rej)));
+      p.catch(() => clipCache.delete(url));
+      clipCache.set(url, p);
     }
-    return clipCache.get(key);
+    return clipCache.get(url);
   }
 
   function setPlayUI(mode, idx) {
-    const btn = $('#play');
-    btn.classList.toggle('loading', mode === 'loading');
+    $('#play').classList.toggle('loading', mode === 'loading');
     $('#play-icon').textContent = mode === 'idle' ? '▶' : '■';
-    if (mode === 'idle') btn.style.setProperty('--p', 0);
+    if (mode === 'idle') $('#play').style.setProperty('--p', 0);
     document.querySelectorAll('.layer').forEach((el, i) => el.classList.toggle('playing', mode !== 'idle' && i === idx));
   }
   function stopAudio() {
@@ -616,16 +455,20 @@
     cancelAnimationFrame(raf);
     setPlayUI('idle');
   }
-  async function playClip(idx) {
+  // force: always (re)start; otherwise a second tap on the playing clip stops it.
+  async function playClip(idx, force) {
     const c = unlockCtx();
-    const wasIdx = playing ? playing.idx : pending ? pending.idx : null;
+    const was = playing ? playing.idx : pending ? pending.idx : null;
     stopAudio();
-    if (wasIdx === idx) return; // second tap on the same clip stops it
+    if (!force && was === idx) return;
     const token = pending = { idx };
     setPlayUI('loading', idx);
     let buf;
-    try { buf = await loadClip(state.song, idx); }
-    catch (e) { if (pending === token) { pending = null; setPlayUI('idle'); toast('Could not load that clip'); } return; }
+    try { buf = await loadClip(game.song.clips[idx]); }
+    catch (e) {
+      if (pending === token) { pending = null; setPlayUI('idle'); toast(navigator.onLine ? 'Could not load this clip' : 'Not saved offline. Skip this song'); }
+      return;
+    }
     if (pending !== token) return;
     pending = null;
     const src = c.createBufferSource();
@@ -643,234 +486,153 @@
     tick();
   }
 
-  /* ---------- Game state ---------- */
-  let LIB, OPTIONS, state;
-
-  function currentClip() {
-    const g = state.g, n = nClips(state.song);
-    return g.done ? n - 1 : Math.min(g.guesses.length, n - 1);
-  }
-
-  function startDaily() {
-    const day = todayIndex();
-    let saved = store.days[day];
-    const song = (saved && LIB.songs.find(s => s.id === saved.songId)) || dailySong(day);
-    if (!saved || saved.songId !== song.id) saved = store.days[day] = { songId: song.id, guesses: [], done: false, won: false };
-    state = { mode: 'daily', day, song, g: saved };
-    begin();
-  }
-  function startFree() {
-    const pool = LIB.songs.length > 1 ? LIB.songs.filter(s => !state || s.id !== state.song.id) : LIB.songs;
-    state = { mode: 'free', song: pool[Math.floor(Math.random() * pool.length)], g: { guesses: [], done: false, won: false } };
-    begin();
-  }
-  function begin() {
-    stopAudio();
-    $('#guess').value = '';
-    hideSuggest();
-    render();
-    loadClip(state.song, currentClip()).catch(() => {});
-  }
-
-  function finishIfOver() {
-    const g = state.g, last = g.guesses[g.guesses.length - 1];
-    if (last && last.t === 'right') { g.done = true; g.won = true; }
-    else if (g.guesses.length >= nStages(state.song)) { g.done = true; g.won = false; }
-    if (g.done && state.mode === 'daily') {
-      const s = store.stats, day = state.day;
-      s.played++;
-      if (g.won) {
-        s.wins++;
-        s.dist[Math.min(g.guesses.length, 5) - 1]++;
-        s.streak = s.lastDay === day - 1 && s.lastWon ? s.streak + 1 : 1;
-        s.max = Math.max(s.max, s.streak);
-      } else {
-        s.dist[5]++;
-        s.streak = 0;
-      }
-      s.lastDay = day; s.lastWon = g.won;
-    }
-    save();
-    stopAudio();
-    render();
-    if (!g.done) loadClip(state.song, currentClip()).catch(() => {});
-  }
-
-  function submitGuess(text) {
-    text = text.trim();
-    if (!text || state.g.done) return;
-    const right = normalize(titleOf(text)) === normalize(state.song.title);
-    state.g.guesses.push({ t: right ? 'right' : 'wrong', text: titleOf(text) });
-    $('#guess').value = '';
-    hideSuggest();
-    if (!right) toast('Nope — next layer unlocked');
-    finishIfOver();
-  }
-  function skip() {
-    if (state.g.done) return;
-    state.g.guesses.push({ t: 'skip' });
-    finishIfOver();
-  }
-
-  /* ---------- Rendering ---------- */
-  function render() {
-    const { song, g } = state, n = nStages(song), cur = g.guesses.length;
-    $('#mode-daily').classList.toggle('on', state.mode === 'daily');
-    $('#mode-free').classList.toggle('on', state.mode === 'free');
-    $('#subtitle').textContent = state.mode === 'daily' ? `Daily #${state.day + 1}` : 'Free play';
-
-    $('#layers').innerHTML = Array.from({ length: n }, (_, i) => {
-      const [icon, name] = stageMeta(song, i), guess = g.guesses[i];
-      let cls = 'locked', st = '🔒';
-      if (guess) { cls = guess.t; st = guess.t === 'right' ? '✓ Got it' : guess.t === 'skip' ? 'Skipped' : '✗ Wrong'; }
-      else if (i === cur && !g.done) { cls = 'current'; st = 'Now'; }
-      else if (g.done) { cls = 'locked'; st = ''; }
-      const playable = (g.done || i <= cur) && i < nClips(song);
-      return `<li class="layer ${cls}${playable ? ' playable' : ''}" data-i="${i}"><span class="ic">${icon}</span><span class="nm">${name}</span><span class="st">${st}</span></li>`;
-    }).join('');
-
-    const clip = currentClip();
-    $('#play-label').textContent = g.done ? 'Full song' : cur >= nClips(song) ? 'Full song + hint' : clip === 0 ? 'Drums only' : `${stageMeta(song, clip)[1].replace('+ ', 'Adds ')}`;
-
-    const showHint = g.done || cur >= nClips(song);
-    $('#hint').hidden = !showHint || g.done;
-    $('#hint').innerHTML = `💡 Released <b>${escapeHtml(song.year || '?')}</b> · artist starts with <b>“${escapeHtml((song.artist || '?')[0])}”</b>`;
-
-    $('#guesses').innerHTML = g.guesses.map(x => x.t === 'skip'
-      ? `<li class="skip"><span>Skipped</span><span>↷</span></li>`
-      : `<li class="${x.t}"><span>${escapeHtml(x.text)}</span><span>${x.t === 'right' ? '✓' : '✗'}</span></li>`).join('');
-
-    $('#guess-form').hidden = g.done;
-    $('#skip').textContent = cur === n - 1 ? 'Give up' : cur === nClips(song) - 1 ? 'Skip (hint)' : `Skip (${stageMeta(song, cur + 1)[1]})`;
-
-    $('#result').hidden = !g.done;
-    if (g.done) {
-      $('#result-msg').textContent = g.won ? ['Drums only?! 🤯', 'Nice ear! 🔥', 'Got it! 🎉', 'Phew! 😅', 'Just made it! 😮‍💨'][Math.min(cur, 5) - 1] || 'Got it!' : 'Out of layers 😢';
-      $('#result-emoji').textContent = emojiRow();
-      $('#result-song').textContent = song.title;
-      $('#result-meta').textContent = [song.artist, song.year].filter(Boolean).join(' · ');
-      $('#again').textContent = state.mode === 'daily' ? 'Free play' : 'Next song';
-    }
-    $('#demo-note').hidden = !LIB.demo;
-    updateCountdown();
-  }
-
-  function emojiRow() {
-    const n = nStages(state.song), gs = state.g.guesses;
-    return Array.from({ length: n }, (_, i) => {
-      const x = gs[i];
-      return !x ? '⬛' : x.t === 'right' ? '🟩' : x.t === 'skip' ? '⬜' : '🟥';
-    }).join('');
-  }
-
-  function updateCountdown() {
-    const el = $('#countdown');
-    if (!state.g.done || state.mode !== 'daily') { el.textContent = ''; return; }
-    const now = new Date(), next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    const s = Math.max(0, Math.floor((next - now) / 1000));
-    const pad = v => String(v).padStart(2, '0');
-    el.textContent = `Next daily song in ${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
-  }
-  setInterval(() => {
-    if (!state) return;
-    if (state.mode === 'daily' && state.day !== todayIndex()) startDaily();
-    else updateCountdown();
-  }, 1000);
-
-  async function share() {
-    const g = state.g, n = nStages(state.song);
-    const head = state.mode === 'daily' ? `Layerdle #${state.day + 1}` : `Layerdle (free play)`;
-    const text = `${head} 🥁 ${g.won ? g.guesses.length : 'X'}/${n}\n${emojiRow()}\n${location.href.split('#')[0].split('?')[0]}`;
+  /* ---------- Keep the screen on during a game ---------- */
+  let wakeLock = null;
+  async function keepAwake(on) {
     try {
-      if (navigator.share) { await navigator.share({ text }); return; }
-      await navigator.clipboard.writeText(text);
-      toast('Copied to clipboard');
-    } catch (e) {
-      if (e && e.name !== 'AbortError') toast('Could not share');
-    }
-  }
-
-  function renderStats() {
-    const s = store.stats, day = todayIndex();
-    const streak = s.lastWon && s.lastDay >= day - 1 ? s.streak : 0;
-    const top = Math.max(1, ...s.dist);
-    $('#stats-body').innerHTML = `
-      <div class="stat-grid">
-        <div><b>${s.played}</b><span>Played</span></div>
-        <div><b>${s.played ? Math.round(100 * s.wins / s.played) : 0}</b><span>Win %</span></div>
-        <div><b>${streak}</b><span>Streak</span></div>
-        <div><b>${s.max}</b><span>Best</span></div>
-      </div>
-      <p>Guess distribution (daily only)</p>
-      <div class="dist">${s.dist.map((v, i) => `<div><span style="width:14px">${i < 5 ? i + 1 : 'X'}</span><span class="bar" style="width:${Math.max(8, 100 * v / top)}%">${v}</span></div>`).join('')}</div>`;
-  }
-
-  /* ---------- Autocomplete ---------- */
-  function buildOptions() {
-    const seen = new Set(), out = [];
-    LIB.songs.map(s => `${s.title} — ${s.artist}`).concat(LIB.decoys).forEach(label => {
-      const k = normalize(label);
-      if (!seen.has(k)) { seen.add(k); out.push({ label, n: k }); }
-    });
-    return out.sort((a, b) => a.label.localeCompare(b.label));
-  }
-  function hideSuggest() { $('#suggest').hidden = true; }
-  function showSuggest() {
-    const q = normalize($('#guess').value);
-    if (q.length < 2) return hideSuggest();
-    const hits = OPTIONS.filter(o => o.n.includes(q)).slice(0, 6);
-    if (!hits.length) return hideSuggest();
-    $('#suggest').innerHTML = hits.map(o => {
-      const [t, a] = o.label.split(' — ');
-      return `<li><button type="button" data-label="${escapeHtml(o.label)}">${escapeHtml(t)}${a ? ` <small>— ${escapeHtml(a)}</small>` : ''}</button></li>`;
-    }).join('');
-    $('#suggest').hidden = false;
-  }
-
-  /* ---------- Wiring ---------- */
-  $('#play').addEventListener('click', () => playClip(currentClip()));
-  $('#layers').addEventListener('click', e => {
-    const li = e.target.closest('.layer.playable');
-    if (li) playClip(+li.dataset.i);
-  });
-  $('#guess-form').addEventListener('submit', e => { e.preventDefault(); submitGuess($('#guess').value); });
-  $('#skip').addEventListener('click', skip);
-  $('#guess').addEventListener('input', showSuggest);
-  $('#guess').addEventListener('focus', showSuggest);
-  $('#guess').addEventListener('blur', () => setTimeout(hideSuggest, 150));
-  $('#suggest').addEventListener('pointerdown', e => e.preventDefault()); // keep the input focused
-  $('#suggest').addEventListener('click', e => {
-    const b = e.target.closest('button');
-    if (b) { $('#guess').value = b.dataset.label; hideSuggest(); }
-  });
-  $('#mode-daily').addEventListener('click', () => { if (state.mode !== 'daily') startDaily(); });
-  $('#mode-free').addEventListener('click', () => { if (state.mode !== 'free') startFree(); });
-  $('#again').addEventListener('click', startFree);
-  $('#share').addEventListener('click', share);
-  $('#help-btn').addEventListener('click', () => { $('#help').hidden = false; });
-  $('#stats-btn').addEventListener('click', () => { renderStats(); $('#stats').hidden = false; });
-  document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => {
-    if (e.target === o || e.target.closest('[data-close]')) o.hidden = true;
-  }));
-
-  /* ---------- Boot ---------- */
-  async function loadLibrary() {
-    try {
-      const r = await fetch('songs.json', { cache: 'no-cache' });
-      if (r.ok) {
-        const j = await r.json();
-        if (j.songs && j.songs.length) return { songs: j.songs, decoys: j.decoys || [], demo: false };
+      if (on && !wakeLock && navigator.wakeLock) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => { wakeLock = null; });
+      } else if (!on && wakeLock) {
+        await wakeLock.release(); wakeLock = null;
       }
     } catch (e) {}
-    return { songs: DEMO_SONGS, decoys: DEMO_DECOYS, demo: true };
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && game && !$('#round').hidden) keepAwake(true);
+  });
+
+  /* ---------- Game ---------- */
+  let game = null;
+  const nClips = s => s.clips.length;
+  const nStages = s => nClips(s) + 1; // + hint stage
+  const stageMeta = (s, i) => i >= nClips(s) ? ['💡', 'Hint'] : nClips(s) === 4 ? STAGES[i] : (i === nClips(s) - 1 ? ['🎤', 'Full song'] : ['🎵', 'Layer ' + (i + 1)]);
+  const pointsAt = i => POINTS[Math.min(i, POINTS.length - 1)];
+  const currentClip = () => game.revealed ? nClips(game.song) - 1 : Math.min(game.layer, nClips(game.song) - 1);
+
+  function buildQueue() {
+    let pool = poolFor(prefs.category);
+    if (!navigator.onLine) pool = pool.filter(songSaved);
+    const seen = id => prefs.played.indexOf(id);
+    const fresh = shuffle(pool.filter(s => seen(s.id) < 0));
+    const old = pool.filter(s => seen(s.id) >= 0).sort((a, b) => seen(a.id) - seen(b.id)); // least recently played first
+    const n = prefs.rounds === 'all' ? pool.length : Math.min(prefs.rounds, pool.length);
+    return fresh.concat(old).slice(0, n);
   }
 
-  loadLibrary().then(lib => {
-    LIB = lib;
-    OPTIONS = buildOptions();
-    startDaily();
-    try { if (!localStorage.getItem(KEY + ':seen')) { $('#help').hidden = false; localStorage.setItem(KEY + ':seen', '1'); } } catch (e) {}
+  function startGame() {
+    if (!prefs.players.length) { toast('Add at least one player'); return; }
+    const queue = buildQueue();
+    if (!queue.length) { toast(navigator.onLine ? 'No songs in this category' : 'No songs saved offline'); return; }
+    unlockCtx();
+    game = { queue, i: 0, scores: Object.fromEntries(prefs.players.map(p => [p, 0])) };
+    keepAwake(true);
+    show('round');
+    startRound();
+  }
+
+  function startRound() {
+    game.song = game.queue[game.i];
+    game.layer = 0;
+    game.revealed = false;
+    renderRound();
+    playClip(0, true);
+    const next = game.queue[game.i + 1];
+    if (next) loadClip(next.clips[0]).catch(() => {});
+    loadClip(game.song.clips[1] || game.song.clips[0]).catch(() => {});
+  }
+
+  function renderRound() {
+    const { song, layer, revealed } = game, n = nStages(song);
+    $('#round-count').textContent = `Song ${game.i + 1} of ${game.queue.length}`;
+    $('#scorebar').innerHTML = Object.entries(game.scores).map(([p, s]) => `<span>${esc(p)}<b>${s}</b></span>`).join('');
+
+    $('#layers').innerHTML = Array.from({ length: n }, (_, i) => {
+      const [icon, name] = stageMeta(song, i);
+      const cls = revealed ? (i <= layer ? '' : 'locked') : i < layer ? '' : i === layer ? 'current' : 'locked';
+      const playable = i < nClips(song) && (revealed || i <= layer);
+      return `<li class="layer ${cls}" data-i="${playable ? i : ''}"><span class="ic">${icon}</span><span class="nm">${name}</span><span class="pt">${pointsAt(i)} pt${pointsAt(i) === 1 ? '' : 's'}</span></li>`;
+    }).join('');
+
+    const atHint = layer >= nClips(song);
+    $('#hint').hidden = !atHint || revealed;
+    $('#hint').innerHTML = '💡 ' + [song.year ? `Released <b>${esc(song.year)}</b>` : '', `Artist starts with <b>“${esc((song.artist || '?')[0])}”</b>`].filter(Boolean).join(' · ');
+
+    $('#answer').hidden = !revealed;
+    $('#answer .t').textContent = song.title;
+    $('#answer .m').textContent = [song.artist, song.year].filter(Boolean).join(' · ');
+
+    $('#play-label').textContent = revealed ? 'Full song' : atHint ? 'Full song + hint' : layer === 0 ? 'Drums only' : stageMeta(song, layer)[1].replace('+ ', 'Added ');
+
+    $('#controls').hidden = revealed;
+    $('#next').disabled = layer >= n - 1;
+    $('#next').textContent = layer >= n - 1 ? 'No more layers' : layer === nClips(song) - 1 ? 'Show hint ➜' : `Add ${stageMeta(song, layer + 1)[1].replace('+ ', '').toLowerCase()} ➜`;
+    $('#reveal').textContent = `Reveal answer`;
+
+    $('#award').hidden = !revealed;
+    const pts = pointsAt(layer);
+    $('#award-btns').innerHTML = Object.keys(game.scores).map(p =>
+      `<button class="btn" data-p="${esc(p)}">${esc(p)}<small>+${pts}</small></button>`).join('') +
+      `<button class="btn nobody" data-p="">Nobody</button>`;
+  }
+
+  function nextLayer() {
+    if (game.layer >= nStages(game.song) - 1) return;
+    game.layer++;
+    renderRound();
+    playClip(currentClip(), true);
+  }
+  function reveal() {
+    game.revealed = true;
+    renderRound();
+    playClip(currentClip(), true);
+  }
+  function finishRound(winner) {
+    const pts = pointsAt(game.layer);
+    if (winner) { game.scores[winner] += pts; toast(`+${pts} for ${winner}`); }
+    const id = game.song.id;
+    prefs.played = prefs.played.filter(x => x !== id).concat(id).slice(-500);
+    savePrefs();
+    game.i++;
+    if (game.i >= game.queue.length) endGame();
+    else startRound();
+  }
+  function endGame() {
+    stopAudio();
+    keepAwake(false);
+    const ranked = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
+    const top = ranked.length ? ranked[0][1] : 0;
+    const winners = ranked.filter(([, s]) => s === top).map(([p]) => p);
+    $('#winner').textContent = top === 0 ? 'Nobody scored!' : winners.length > 1 ? `Tie: ${winners.join(' & ')}` : `${winners[0]} wins!`;
+    const medal = ['🥇', '🥈', '🥉'];
+    $('#standings').innerHTML = ranked.map(([p, s], i) => `<li><span>${medal[i] || ''}</span>${esc(p)}<span class="pts">${s}</span></li>`).join('');
+    show('end');
+  }
+
+  $('#start').addEventListener('click', startGame);
+  $('#play').addEventListener('click', () => playClip(currentClip()));
+  $('#layers').addEventListener('click', e => {
+    const li = e.target.closest('.layer');
+    if (li && li.dataset.i !== '') playClip(+li.dataset.i);
   });
+  $('#next').addEventListener('click', nextLayer);
+  $('#reveal').addEventListener('click', reveal);
+  $('#skip-song').addEventListener('click', () => {
+    stopAudio();
+    game.queue.splice(game.i, 1);
+    if (game.i >= game.queue.length) endGame(); else startRound();
+  });
+  $('#award-btns').addEventListener('click', e => {
+    const b = e.target.closest('button[data-p]');
+    if (b) finishRound(b.dataset.p || null);
+  });
+  $('#quit').addEventListener('click', () => { if (confirm('End this game and see the scores?')) endGame(); });
+  $('#again').addEventListener('click', startGame);
+  $('#home').addEventListener('click', () => { renderSetup(); show('setup'); });
+
+  /* ---------- Boot ---------- */
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  Promise.all([loadLibrary(), refreshCached()]).then(renderSetup);
 })();
 </script>
 </body>
