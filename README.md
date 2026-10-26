@@ -18,7 +18,9 @@ One-time setup on your PC:
 Then for each batch of songs:
 
 1. Put audio files in `incoming/`, named `Artist - Title (Year).mp3`.
-   Add `@1m05` to the name to start the clip at 1:05 (the default is 0:30). Pick a part where the drums are going.
+   Leave the start time out and the script picks it: it finds where Apple Music's 30-second preview (usually the hook)
+   sits in your song, or else detects the chorus. To force a start, add `@1m05` to the name (clip starts at 1:05),
+   e.g. for songs whose intro is the famous part.
 2. Double-click `add_songs.cmd` (or run `python process_songs.py`). Roughly 1 minute per song on a CPU.
 3. Upload the new `songs/` folder and `songs.json`.
 

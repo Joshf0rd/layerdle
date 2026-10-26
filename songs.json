@@ -1,4 +1,53 @@
 {
-  "songs": [],
+  "songs": [
+    {
+      "id": "owl-city-fireflies",
+      "title": "Fireflies",
+      "artist": "Owl City",
+      "year": null,
+      "clips": [
+        "songs/owl-city-fireflies/1.mp3",
+        "songs/owl-city-fireflies/2.mp3",
+        "songs/owl-city-fireflies/3.mp3",
+        "songs/owl-city-fireflies/4.mp3"
+      ]
+    },
+    {
+      "id": "basshunter-dota",
+      "title": "DotA",
+      "artist": "Basshunter",
+      "year": null,
+      "clips": [
+        "songs/basshunter-dota/1.mp3",
+        "songs/basshunter-dota/2.mp3",
+        "songs/basshunter-dota/3.mp3",
+        "songs/basshunter-dota/4.mp3"
+      ]
+    },
+    {
+      "id": "maroon-5-animals",
+      "title": "Animals",
+      "artist": "Maroon 5",
+      "year": null,
+      "clips": [
+        "songs/maroon-5-animals/1.mp3",
+        "songs/maroon-5-animals/2.mp3",
+        "songs/maroon-5-animals/3.mp3",
+        "songs/maroon-5-animals/4.mp3"
+      ]
+    },
+    {
+      "id": "taio-cruz-break-your-heart",
+      "title": "Break Your Heart",
+      "artist": "Taio Cruz",
+      "year": null,
+      "clips": [
+        "songs/taio-cruz-break-your-heart/1.mp3",
+        "songs/taio-cruz-break-your-heart/2.mp3",
+        "songs/taio-cruz-break-your-heart/3.mp3",
+        "songs/taio-cruz-break-your-heart/4.mp3"
+      ]
+    }
+  ],
   "decoys": []
 }
