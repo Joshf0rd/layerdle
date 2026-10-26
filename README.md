@@ -20,8 +20,7 @@ One-time setup: Python 3.12, ffmpeg and Demucs (`pip install "torch<2.9" "torcha
      To add an existing song to another category, drop the same file in that folder. It gets tagged, not re-processed.
    - **Clip start:** picked automatically, by matching Apple Music's 30s preview (usually the hook) or else detecting
      the chorus. To force it, add `@1m05` to the name (starts at 1:05).
-2. Double-click `add_songs.cmd`. Roughly 1–2 minutes per song.
-3. Commit and push `songs/` and `songs.json`.
+2. Double-click `add_songs.cmd`. Roughly 1–2 minutes per song. When it finishes it publishes the new songs automatically.
 
 ## Files
 

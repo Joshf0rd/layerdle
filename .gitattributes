@@ -1,0 +1,2 @@
+*.cmd text eol=crlf
+*.mp3 binary
