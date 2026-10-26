@@ -65,21 +65,11 @@
     padding: 10px 12px; font-size: 14px; color: var(--muted);
   }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--panel-2); border: 1px solid var(--line);
-    border-radius: 999px; padding: 8px 8px 8px 14px; font-weight: 600;
+  .team-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .team-tag {
+    background: var(--c); color: #14121c;
+    border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: 14px;
   }
-  .chip button { border: 0; background: var(--line); width: 26px; height: 26px; border-radius: 50%; font-size: 13px; }
-  .add-row { display: flex; gap: 8px; }
-  .add-row input {
-    flex: 1; min-width: 0;
-    padding: 12px 14px; border-radius: 12px;
-    border: 1px solid var(--line); background: var(--panel); color: var(--text);
-    font-size: 16px; outline: none;
-  }
-  .add-row input:focus { border-color: var(--accent-2); }
 
   .cats { display: flex; flex-direction: column; gap: 8px; }
   .cat {
@@ -99,7 +89,7 @@
   }
   .save.done { color: var(--ok); border-color: transparent; background: transparent; }
 
-  .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: var(--panel); padding: 4px; border-radius: 12px; }
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; background: var(--panel); padding: 4px; border-radius: 12px; }
   .seg button { border: 0; background: transparent; padding: 10px 4px; border-radius: 9px; color: var(--muted); font-weight: 700; }
   .seg button.on { background: var(--panel-2); color: var(--text); }
 
@@ -115,8 +105,8 @@
   /* Round */
   .round-top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-weight: 600; }
   .scorebar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
-  .scorebar span { flex: none; background: var(--panel); border-radius: 999px; padding: 6px 12px; font-size: 14px; }
-  .scorebar b { color: var(--gold); margin-left: 4px; }
+  .scorebar span { flex: none; background: var(--c); color: #14121c; border-radius: 999px; padding: 6px 12px; font-size: 14px; font-weight: 700; }
+  .scorebar b { margin-left: 6px; font-size: 16px; }
 
   .layers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
   .layer {
@@ -155,11 +145,21 @@
   @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
   .play-label { color: var(--muted); font-size: 15px; }
 
+  .peek {
+    align-self: center;
+    min-width: 220px; max-width: 100%;
+    border: 1px dashed var(--line); background: var(--panel);
+    border-radius: 999px; padding: 10px 18px;
+    color: var(--muted); font-size: 15px; font-weight: 600;
+    -webkit-touch-callout: none; touch-action: none;
+  }
+  .peek.on { border-style: solid; border-color: var(--gold); color: var(--text); font-size: 13px; }
+
   .controls, .award { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
   .award p { margin: 0; text-align: center; font-weight: 800; font-size: 18px; }
   .award-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .award-btns .btn { padding: 18px 10px; font-size: 17px; }
-  .award-btns .btn small { display: block; color: var(--gold); font-size: 14px; margin-top: 2px; }
+  .award-btns .btn { padding: 18px 10px; font-size: 18px; background: var(--c); color: #14121c; }
+  .award-btns .btn small { display: block; font-size: 14px; margin-top: 2px; opacity: 0.75; }
   .award-btns .nobody { grid-column: 1 / -1; background: var(--panel); color: var(--muted); }
 
   /* End */
@@ -168,6 +168,7 @@
   .standings { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .standings li { display: flex; align-items: center; gap: 12px; background: var(--panel); border-radius: 14px; padding: 14px 16px; font-size: 18px; font-weight: 700; }
   .standings li .pts { margin-left: auto; color: var(--gold); }
+  .standings .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c); }
   .standings li:first-child { background: var(--panel-2); border: 2px solid var(--gold); }
 
   .toast {
@@ -195,12 +196,9 @@
     <div id="net" class="note" hidden>📴 You're offline. Only songs saved for offline will play.</div>
     <div id="empty" class="note" hidden>No songs yet. Add some with add_songs.cmd and push them.</div>
 
-    <h2>Players or teams</h2>
-    <div id="players" class="chips"></div>
-    <form id="add-player" class="add-row" autocomplete="off">
-      <input id="player-name" placeholder="Add a name" maxlength="20" autocomplete="off" autocorrect="off" enterkeyhint="done">
-      <button class="btn small">Add</button>
-    </form>
+    <h2>How many teams?</h2>
+    <div id="team-count" class="seg"></div>
+    <div id="team-list" class="team-list"></div>
 
     <h2>Category</h2>
     <div id="cats" class="cats"></div>
@@ -225,6 +223,7 @@
       <button id="play" class="play" aria-label="Play"><span id="play-icon">▶</span></button>
       <div id="play-label" class="play-label"></div>
     </div>
+    <button id="peek" class="peek">👁 Hold to peek at the answer</button>
     <div id="controls" class="controls">
       <button id="next" class="btn big">Next layer</button>
       <button id="reveal" class="btn primary big">Reveal answer</button>
@@ -259,13 +258,15 @@
   const STAGES = [['🥁', 'Drums'], ['🎸', '+ Bass'], ['🎹', '+ Instruments'], ['🎤', '+ Vocals']];
   const POINTS = [5, 4, 3, 2, 1]; // per layer; the last one is the hint
   const ROUND_OPTIONS = [5, 10, 20, 'all'];
+  const TEAMS = [['Red', '#ff5c6c'], ['Blue', '#4da3ff'], ['Green', '#3ddc97'], ['Yellow', '#ffcc4d'], ['Purple', '#b18cff'], ['Orange', '#ff9a3d']];
+  const teamColor = name => (TEAMS.find(([n]) => n === name) || [, '#9d98b8'])[1];
   const CLIP_CACHE = 'layerdle-clips';
 
   /* ---------- Settings (per device) ---------- */
   const KEY = 'layerdle:party';
   let prefs;
   try { prefs = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { prefs = {}; }
-  prefs.players = prefs.players || ['Team 1', 'Team 2'];
+  prefs.teams = prefs.teams || 2;
   prefs.category = prefs.category || 'All songs';
   prefs.rounds = prefs.rounds || 10;
   prefs.played = prefs.played || [];
@@ -346,9 +347,11 @@
   }
 
   /* ---------- Setup screen ---------- */
-  function renderPlayers() {
-    $('#players').innerHTML = prefs.players.map((p, i) =>
-      `<span class="chip">${esc(p)}<button data-i="${i}" aria-label="Remove ${esc(p)}">✕</button></span>`).join('');
+  function renderTeams() {
+    $('#team-count').innerHTML = TEAMS.map((_, i) =>
+      `<button data-t="${i + 1}" class="${i + 1 === prefs.teams ? 'on' : ''}">${i + 1}</button>`).join('');
+    $('#team-list').innerHTML = TEAMS.slice(0, prefs.teams).map(([n, c]) =>
+      `<span class="team-tag" style="--c:${c}">${n}</span>`).join('');
   }
   function renderCats() {
     $('#cats').innerHTML = categories().map(([name, songs]) => {
@@ -369,25 +372,16 @@
   }
   function renderSetup() {
     if (!poolFor(prefs.category).length || !categories().some(([n]) => n === prefs.category)) prefs.category = 'All songs';
-    renderPlayers(); renderCats(); renderRounds();
+    renderTeams(); renderCats(); renderRounds();
     $('#net').hidden = navigator.onLine;
     $('#empty').hidden = SONGS.length > 0;
   }
 
-  $('#add-player').addEventListener('submit', e => {
-    e.preventDefault();
-    const name = $('#player-name').value.trim();
-    if (!name) return;
-    if (prefs.players.some(p => p.toLowerCase() === name.toLowerCase())) { toast('That name is taken'); return; }
-    prefs.players.push(name);
-    $('#player-name').value = '';
-    savePrefs(); renderPlayers();
-  });
-  $('#players').addEventListener('click', e => {
-    const b = e.target.closest('button[data-i]');
+  $('#team-count').addEventListener('click', e => {
+    const b = e.target.closest('button[data-t]');
     if (!b) return;
-    prefs.players.splice(+b.dataset.i, 1);
-    savePrefs(); renderPlayers();
+    prefs.teams = +b.dataset.t;
+    savePrefs(); renderTeams();
   });
   $('#cats').addEventListener('click', e => {
     const save = e.target.closest('[data-save]');
@@ -521,11 +515,10 @@
   }
 
   function startGame() {
-    if (!prefs.players.length) { toast('Add at least one player'); return; }
     const queue = buildQueue();
     if (!queue.length) { toast(navigator.onLine ? 'No songs in this category' : 'No songs saved offline'); return; }
     unlockCtx();
-    game = { queue, i: 0, scores: Object.fromEntries(prefs.players.map(p => [p, 0])) };
+    game = { queue, i: 0, scores: Object.fromEntries(TEAMS.slice(0, prefs.teams).map(([n]) => [n, 0])) };
     keepAwake(true);
     show('round');
     startRound();
@@ -545,7 +538,7 @@
   function renderRound() {
     const { song, layer, revealed } = game, n = nStages(song);
     $('#round-count').textContent = `Song ${game.i + 1} of ${game.queue.length}`;
-    $('#scorebar').innerHTML = Object.entries(game.scores).map(([p, s]) => `<span>${esc(p)}<b>${s}</b></span>`).join('');
+    $('#scorebar').innerHTML = Object.entries(game.scores).map(([p, s]) => `<span style="--c:${teamColor(p)}">${esc(p)}<b>${s}</b></span>`).join('');
 
     $('#layers').innerHTML = Array.from({ length: n }, (_, i) => {
       const [icon, name] = stageMeta(song, i);
@@ -565,6 +558,8 @@
     $('#play-label').textContent = revealed ? 'Full song' : atHint ? 'Full song + hint' : layer === 0 ? 'Drums only' : stageMeta(song, layer)[1].replace('+ ', 'Added ');
 
     $('#controls').hidden = revealed;
+    $('#peek').hidden = revealed;
+    hidePeek();
     $('#next').disabled = layer >= n - 1;
     $('#next').textContent = layer >= n - 1 ? 'No more layers' : layer === nClips(song) - 1 ? 'Show hint ➜' : `Add ${stageMeta(song, layer + 1)[1].replace('+ ', '').toLowerCase()} ➜`;
     $('#reveal').textContent = `Reveal answer`;
@@ -572,7 +567,7 @@
     $('#award').hidden = !revealed;
     const pts = pointsAt(layer);
     $('#award-btns').innerHTML = Object.keys(game.scores).map(p =>
-      `<button class="btn" data-p="${esc(p)}">${esc(p)}<small>+${pts}</small></button>`).join('') +
+      `<button class="btn" style="--c:${teamColor(p)}" data-p="${esc(p)}">${esc(p)}<small>+${pts}</small></button>`).join('') +
       `<button class="btn nobody" data-p="">Nobody</button>`;
   }
 
@@ -605,7 +600,7 @@
     const winners = ranked.filter(([, s]) => s === top).map(([p]) => p);
     $('#winner').textContent = top === 0 ? 'Nobody scored!' : winners.length > 1 ? `Tie: ${winners.join(' & ')}` : `${winners[0]} wins!`;
     const medal = ['🥇', '🥈', '🥉'];
-    $('#standings').innerHTML = ranked.map(([p, s], i) => `<li><span>${medal[i] || ''}</span>${esc(p)}<span class="pts">${s}</span></li>`).join('');
+    $('#standings').innerHTML = ranked.map(([p, s], i) => `<li><span>${medal[i] || ''}</span><span class="dot" style="--c:${teamColor(p)}"></span>${esc(p)}<span class="pts">${s}</span></li>`).join('');
     show('end');
   }
 
@@ -615,6 +610,23 @@
     const li = e.target.closest('.layer');
     if (li && li.dataset.i !== '') playClip(+li.dataset.i);
   });
+  // Hold to peek: the answer shows only while a finger is on the button.
+  const PEEK_LABEL = '👁 Hold to peek at the answer';
+  function showPeek(e) {
+    e.preventDefault();
+    try { $('#peek').setPointerCapture(e.pointerId); } catch (err) {} // a small finger slide shouldn't hide it
+    const s = game.song;
+    $('#peek').textContent = `${s.title} — ${s.artist}`;
+    $('#peek').classList.add('on');
+  }
+  function hidePeek() {
+    $('#peek').textContent = PEEK_LABEL;
+    $('#peek').classList.remove('on');
+  }
+  $('#peek').addEventListener('pointerdown', showPeek);
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => $('#peek').addEventListener(t, hidePeek));
+  $('#peek').addEventListener('contextmenu', e => e.preventDefault());
+
   $('#next').addEventListener('click', nextLayer);
   $('#reveal').addEventListener('click', reveal);
   $('#skip-song').addEventListener('click', () => {
