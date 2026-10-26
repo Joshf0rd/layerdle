@@ -4,4 +4,5 @@
 .assetsignore
 README.md
 process_songs.py
+add_songs.cmd
 incoming

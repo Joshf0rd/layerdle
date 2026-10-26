@@ -4,7 +4,8 @@ Drop audio files into ./incoming named like:
 
     Artist - Title.mp3
     Artist - Title (1999).mp3          <- adds the year (used for the hint)
-    Artist - Title (1999) @1:05.mp3    <- clip starts at 1:05 instead of the default
+    Artist - Title (1999) @1m05.mp3    <- clip starts at 1:05 instead of the default
+                                          (Windows doesn't allow ":" in names; @65 works too)
 
 Then run:
 
@@ -38,13 +39,13 @@ AUDIO_EXTS = {".mp3", ".wav", ".m4a", ".flac", ".ogg"}
 NAME_RE = re.compile(
     r"^(?P<artist>.+?)\s+-\s+(?P<title>.+?)"
     r"(?:\s*\((?P<year>\d{4})\))?"
-    r"(?:\s*@(?P<start>[\d:.]+))?$"
+    r"(?:\s*@(?P<start>[\d:m.]+))?$"
 )
 
 
 def to_seconds(text):
     secs = 0.0
-    for part in text.split(":"):
+    for part in re.split(r"[:m]", text):
         secs = secs * 60 + float(part)
     return secs
 
