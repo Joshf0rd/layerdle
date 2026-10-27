@@ -43,6 +43,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unicodedata
 from pathlib import Path
 
@@ -399,6 +400,7 @@ def main():
                 make_clip(stem_dir, parts, start, args.length, out_dir / f"{n}.mp3")
             # The game cuts this one off after 1, 2, 3... seconds, so no fade-in to blur the first second.
             make_clip(stem_dir, NFN_MIX, nstart, NFN_LENGTH, out_dir / "nfn.mp3", fade_in=0.01, fade_out=0.5)
+            version = int(time.time())
 
         entry = {
             "id": song_id,
@@ -408,8 +410,9 @@ def main():
             "start": round(start, 1),
             "nfnStart": round(nstart, 2),
             "categories": categories,
-            "clips": [f"songs/{song_id}/{n}.mp3" for n in range(1, len(LAYERS) + 1)],
-            "nfn": f"songs/{song_id}/nfn.mp3",
+            # ?v= gives re-processed clips new URLs, so phones don't keep playing an old cached copy
+            "clips": [f"songs/{song_id}/{n}.mp3?v={version}" for n in range(1, len(LAYERS) + 1)],
+            "nfn": f"songs/{song_id}/nfn.mp3?v={version}",
         }
         if existing:
             db["songs"][db["songs"].index(existing)] = entry

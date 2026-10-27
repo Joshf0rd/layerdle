@@ -345,7 +345,14 @@
 
   async function refreshCached() {
     if (!canCache) return;
-    try { cached = new Set((await (await caches.open(CLIP_CACHE)).keys()).map(r => r.url)); } catch (e) {}
+    try {
+      const cache = await caches.open(CLIP_CACHE);
+      // Drop clips the library no longer uses (old versions of re-processed songs, removed songs).
+      const live = new Set(SONGS.flatMap(songUrls));
+      const keys = await cache.keys();
+      if (live.size) await Promise.all(keys.filter(r => !live.has(r.url)).map(r => cache.delete(r)));
+      cached = new Set(keys.map(r => r.url).filter(u => live.has(u)));
+    } catch (e) {}
   }
   async function saveOffline(name) {
     if (downloads.has(name)) return;
@@ -710,7 +717,7 @@
 
   /* ---------- Boot ---------- */
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js').catch(() => {});
-  Promise.all([loadLibrary(), refreshCached()]).then(renderSetup);
+  loadLibrary().then(refreshCached).then(renderSetup);
 })();
 </script>
 </body>
