@@ -65,6 +65,15 @@
     padding: 10px 12px; font-size: 14px; color: var(--muted);
   }
 
+  .resume {
+    background: var(--panel-2); border: 2px solid var(--accent); border-radius: 16px;
+    padding: 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .resume b { font-size: 18px; }
+  .resume p { margin: 0; color: var(--muted); font-size: 14px; }
+  .resume .scorebar { flex-wrap: wrap; }
+  .resume .btn.primary { color: var(--text); }
+
   .team-list { display: flex; flex-wrap: wrap; gap: 8px; }
   .team-tag {
     background: var(--c); color: #14121c;
@@ -208,6 +217,16 @@
 
     <div id="net" class="note" hidden>📴 You're offline. Only songs saved for offline will play.</div>
     <div id="empty" class="note" hidden>No songs yet. Add some with add_songs.cmd.</div>
+
+    <div id="resume" class="resume" hidden>
+      <b>Continue game?</b>
+      <p id="resume-info"></p>
+      <div id="resume-scores" class="scorebar"></div>
+      <div class="row-2">
+        <button id="resume-no" class="btn ghost">Discard</button>
+        <button id="resume-yes" class="btn primary">Continue ➜</button>
+      </div>
+    </div>
 
     <h2>Game mode</h2>
     <div id="modes" class="modes"></div>
@@ -416,6 +435,7 @@
     renderModes(); renderTeams(); renderCats(); renderRounds();
     $('#net').hidden = navigator.onLine;
     $('#empty').hidden = SONGS.length > 0;
+    renderResume();
   }
 
   $('#modes').addEventListener('click', e => {
@@ -582,6 +602,47 @@
     return fresh.concat(old).slice(0, n);
   }
 
+  /* ---------- Resume: iOS often kills the app during a call or a sat-nav switch ---------- */
+  const GAME_KEY = 'layerdle:game';
+  const RESUME_MAX_AGE = 24 * 3600 * 1000;
+  function saveGame() {
+    const { mode, queue, i, layer, revealed, scores } = game;
+    try {
+      localStorage.setItem(GAME_KEY, JSON.stringify({ mode, ids: queue.map(s => s.id), i, layer, revealed, scores, at: Date.now() }));
+    } catch (e) {}
+  }
+  const clearGame = () => { try { localStorage.removeItem(GAME_KEY); } catch (e) {} };
+  function savedGame() {
+    let g;
+    try { g = JSON.parse(localStorage.getItem(GAME_KEY)); } catch (e) {}
+    if (!g || !Array.isArray(g.ids) || Date.now() - g.at > RESUME_MAX_AGE) return null;
+    // Songs removed from the library since are dropped; i shifts back for any that came before it.
+    const byId = new Map(SONGS.map(s => [s.id, s]));
+    const i = g.i - g.ids.slice(0, g.i).filter(id => !byId.has(id)).length;
+    const keepPlace = byId.has(g.ids[g.i]);
+    const queue = g.ids.map(id => byId.get(id)).filter(Boolean);
+    if (i >= queue.length) return null;
+    return { mode: MODES[g.mode] ? g.mode : 'layers', queue, i, scores: g.scores,
+      layer: keepPlace ? g.layer || 0 : 0, revealed: keepPlace && !!g.revealed };
+  }
+  function renderResume() {
+    const g = savedGame();
+    $('#resume').hidden = !g;
+    if (!g) return;
+    $('#resume-info').textContent = `${MODES[g.mode].name} · song ${g.i + 1} of ${g.queue.length}`;
+    $('#resume-scores').innerHTML = Object.entries(g.scores).map(([p, s]) => `<span style="--c:${teamColor(p)}">${esc(p)}<b>${s}</b></span>`).join('');
+  }
+  function resumeGame() {
+    const g = savedGame();
+    if (!g) { renderResume(); return; }
+    unlockCtx();
+    game = { ...g, song: g.queue[g.i] };
+    keepAwake(true);
+    show('round');
+    renderRound();
+    playClip(currentClip(), true);
+  }
+
   function startGame() {
     const queue = buildQueue();
     if (!queue.length) { toast(navigator.onLine ? 'No songs in this category' : 'No songs saved offline'); return; }
@@ -596,6 +657,7 @@
     game.song = game.queue[game.i];
     game.layer = 0;
     game.revealed = false;
+    saveGame();
     renderRound();
     playClip(0, true);
     // Warm up what's likely next: this song's following stage and reveal, and the next song's first clip.
@@ -647,11 +709,13 @@
   function nextLayer() {
     if (game.layer >= nStages(game.song) - 1) return;
     game.layer++;
+    saveGame();
     renderRound();
     playClip(currentClip(), true);
   }
   function reveal() {
     game.revealed = true;
+    saveGame();
     renderRound();
     playClip(currentClip(), true);
   }
@@ -666,6 +730,7 @@
     else startRound();
   }
   function endGame() {
+    clearGame();
     stopAudio();
     keepAwake(false);
     const ranked = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
@@ -714,6 +779,8 @@
   $('#quit').addEventListener('click', () => { if (confirm('End this game and see the scores?')) endGame(); });
   $('#again').addEventListener('click', startGame);
   $('#home').addEventListener('click', () => { renderSetup(); show('setup'); });
+  $('#resume-yes').addEventListener('click', resumeGame);
+  $('#resume-no').addEventListener('click', () => { clearGame(); renderResume(); });
 
   /* ---------- Boot ---------- */
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js').catch(() => {});
