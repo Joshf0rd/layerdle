@@ -72,10 +72,20 @@
   .fix label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
   .fix input { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; width: 100%; min-width: 0; }
   .fix .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .out { display: flex; gap: 8px; align-items: center; }
-  .out code { flex: 1; padding: 8px; }
-  .copy { border: 0; border-radius: 10px; padding: 9px 14px; font-weight: 800; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .primary { border: 0; border-radius: 12px; padding: 12px 14px; font-weight: 800; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .primary:disabled { opacity: 0.4; }
+  .ghost { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-weight: 700; background: var(--panel); color: var(--muted); }
   .err { color: var(--accent); font-size: 13px; }
+  .queued { color: var(--ok); font-size: 13px; font-weight: 700; }
+
+  .queue { background: var(--panel-2); border: 2px solid var(--accent); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .queue b { font-size: 16px; }
+  .queue ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+  .queue li { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .queue li span { color: var(--muted); }
+  .queue li button { border: 0; background: transparent; color: var(--muted); font-size: 18px; padding: 0 6px; }
+  .queue .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .queue p { margin: 0; font-size: 13px; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -89,12 +99,21 @@
   <details class="how">
     <summary>How to fix a bad clip</summary>
     <ol>
-      <li>Listen to the full song and note where the clip should start, e.g. <code>1:05</code>.</li>
-      <li>Tap <b>Fix this clip</b> on the song, type the time, and copy the file name it makes.</li>
-      <li>On the PC, find the song's MP3 in <code>incoming\done</code>, rename it to that name and move it into <code>incoming</code>.</li>
-      <li>Double-click <code>add_songs.cmd</code>. It re-makes that song's clips and publishes them.</li>
+      <li>Tap <b>Fix this clip</b> on the song, type where it should start (e.g. <code>1:05</code>) and tap <b>Add to fix list</b>. Works offline.</li>
+      <li>When you have signal, tap <b>Send to PC</b>. GitHub opens with the fixes filled in: tap <b>Commit changes</b>.</li>
+      <li>Next time <code>add_songs.cmd</code> runs on the PC, it picks the fixes up, re-makes those clips and publishes them.</li>
     </ol>
   </details>
+
+  <div id="queue" class="queue" hidden>
+    <b id="queue-title"></b>
+    <ul id="queue-list"></ul>
+    <div class="row">
+      <button id="queue-clear" class="ghost">Clear list</button>
+      <button id="queue-send" class="primary">Send to PC</button>
+    </div>
+    <p id="queue-note">Opens GitHub. Tap “Commit changes” there, then come back and clear the list.</p>
+  </div>
 
   <div class="filters">
     <input id="q" type="search" placeholder="Search songs or artists" autocomplete="off">
@@ -125,7 +144,28 @@
     const secs = (+m[1] || 0) * 60 + +m[2];
     return `${Math.floor(secs / 60)}m${String(secs % 60).padStart(2, '0')}`;
   }
-  const safeName = s => s.replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ').trim();
+  // Fixes wait on this device until sent; add_songs.cmd on the PC reads them from the repo's fixes/ folder.
+  const REPO = 'Joshf0rd/layerdle';
+  const FIX_KEY = 'layerdle:fixes';
+  let fixes = [];
+  try { fixes = JSON.parse(localStorage.getItem(FIX_KEY)) || []; } catch (e) {}
+  const saveFixes = () => { try { localStorage.setItem(FIX_KEY, JSON.stringify(fixes)); } catch (e) {} };
+  const fixLine = f => [f.id, f.start && `@${f.start}`, f.nfn && `#${f.nfn}`].filter(Boolean).join(' ');
+  const fixLabel = f => [f.start && `clip from ${f.start.replace('m', ':')}`, f.nfn && `Note for Note ${f.nfn.replace('m', ':')}`].filter(Boolean).join(', ');
+
+  function renderQueue() {
+    $('#queue').hidden = !fixes.length;
+    $('#queue-title').textContent = `🛠 ${fixes.length} fix${fixes.length === 1 ? '' : 'es'} waiting to send`;
+    $('#queue-list').innerHTML = fixes.map((f, i) =>
+      `<li><div>${esc(f.title)}<br><span>${esc(fixLabel(f))}</span></div><button data-i="${i}" aria-label="Remove">✕</button></li>`).join('');
+  }
+  function sendFixes() {
+    const now = new Date(), pad = n => String(n).padStart(2, '0');
+    const file = `fixes/${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.txt`;
+    const body = fixes.map(f => `${fixLine(f)}    # ${f.title}`).join('\n') + '\n';
+    window.open(`https://github.com/${REPO}/new/main?filename=${encodeURIComponent(file)}&value=${encodeURIComponent(body)}`, '_blank');
+    $('#queue-note').textContent = 'Committed it on GitHub? Then tap Clear list.';
+  }
 
   function render() {
     const q = $('#q').value.trim().toLowerCase(), cat = $('#cat').value;
@@ -152,25 +192,23 @@
             <label>Note for Note start<input class="f-nfn" placeholder="1:05, intro or chorus"></label>
           </div>
           <div class="err" hidden></div>
-          <div class="out"><code class="name"></code><button class="copy">Copy</button></div>
+          <button class="primary add">Add to fix list</button>
         </div>
       </li>`).join('');
   }
 
-  function updateFix(li) {
-    const s = SONGS.find(x => x.id === li.dataset.id);
+  function readFix(li) {
     const start = toOverride(li.querySelector('.f-start').value);
     const rawNfn = li.querySelector('.f-nfn').value.trim().toLowerCase();
     const nfn = ['intro', 'chorus'].includes(rawNfn) ? rawNfn : toOverride(rawNfn);
+    return { start, nfn, ok: start !== null && nfn !== null && !!(start || nfn) };
+  }
+  function updateFix(li) {
+    const { start, nfn, ok } = readFix(li);
     const err = li.querySelector('.err');
     err.hidden = start !== null && nfn !== null;
     err.textContent = 'Use a time like 1:05 (or intro / chorus for Note for Note).';
-    const parts = [safeName(`${s.artist} - ${s.title}`)];
-    if (s.year) parts.push(`(${s.year})`);
-    if (start) parts.push(`@${start}`);
-    if (nfn) parts.push(`#${nfn}`);
-    li.querySelector('.name').textContent = (start || nfn) ? parts.join(' ') + '.mp3' : 'Type a time above';
-    li.querySelector('.copy').disabled = !(start || nfn) || !err.hidden;
+    li.querySelector('.add').disabled = !ok;
   }
 
   $('#songs').addEventListener('click', e => {
@@ -194,13 +232,28 @@
       if (!fix.hidden) { updateFix(li); li.querySelector('.f-start').focus(); }
       return;
     }
-    const copy = e.target.closest('.copy');
-    if (copy) {
-      navigator.clipboard.writeText(li.querySelector('.name').textContent)
-        .then(() => { copy.textContent = 'Copied'; setTimeout(() => copy.textContent = 'Copy', 1500); })
-        .catch(() => {});
+    if (e.target.closest('.add')) {
+      const { start, nfn, ok } = readFix(li);
+      if (!ok) return;
+      const s = SONGS.find(x => x.id === li.dataset.id);
+      fixes = fixes.filter(f => f.id !== s.id).concat({ id: s.id, title: `${s.artist} - ${s.title}`, start, nfn });
+      saveFixes();
+      renderQueue();
+      li.querySelector('.fix').hidden = true;
+      li.querySelector('.fix-toggle').textContent = 'Fix this clip (added to list)';
     }
   });
+  $('#queue-list').addEventListener('click', e => {
+    const b = e.target.closest('button[data-i]');
+    if (b) { fixes.splice(+b.dataset.i, 1); saveFixes(); renderQueue(); }
+  });
+  $('#queue-send').addEventListener('click', sendFixes);
+  $('#queue-clear').addEventListener('click', () => {
+    if (!confirm('Clear the fix list? Only do this once you\'ve committed them on GitHub.')) return;
+    fixes = []; saveFixes(); renderQueue();
+    $('#queue-note').textContent = 'Opens GitHub. Tap “Commit changes” there, then come back and clear the list.';
+  });
+  renderQueue();
   $('#songs').addEventListener('input', e => { if (e.target.closest('.fix')) updateFix(e.target.closest('.song')); });
   audio.addEventListener('ended', () => { if (playing) playing.classList.remove('on'); playing = null; });
   $('#q').addEventListener('input', render);

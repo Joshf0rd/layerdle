@@ -29,10 +29,14 @@ emoji and `ft.` features are tidied automatically.
 
 ## Fixing a bad clip
 
-Open **Review clips** (bottom of the setup screen, or `/review.html`) to play every song's clips. If one starts in the
-wrong place, tap **Fix this clip**, type the right time and copy the file name it makes. Rename the song's MP3 in
-`incoming\done` to that name, move it to `incoming` and run `add_songs.cmd`. A name with `@` or `#` re-does a song
-that's already in; the start time you didn't give is kept.
+Open **Review clips** (bottom of the setup screen, or `/review.html`), works on the phone, even offline:
+
+1. Tap **Fix this clip** on a song, type where it should start (e.g. `1:05`) and tap **Add to fix list**.
+2. With signal, tap **Send to PC**. GitHub opens with a `fixes/….txt` file filled in: tap **Commit changes**, then clear the list.
+3. Next time `add_songs.cmd` runs it pulls the fixes, moves each song's MP3 from `incoming\done` back into `incoming`
+   with the new times and re-does it. The start time you didn't give is kept.
+
+By hand: a file named with `@` or `#` (e.g. `Katy Perry - Roar @0m45.mp3`) re-does a song that's already in.
 
 ## Files
 

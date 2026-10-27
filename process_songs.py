@@ -311,6 +311,44 @@ def find_inputs(indir):
     return found
 
 
+def apply_fixes(fix_dir, indir, songs):
+    """Turn fixes sent from review.html (fixes/*.txt, lines like 'song-id @1m05 #intro') into
+    re-do files: the song's original MP3 moves from incoming/done back to incoming, renamed
+    with the new times. Lines whose MP3 can't be found stay in the file for next time."""
+    if not fix_dir.is_dir():
+        return
+    done = indir / "done"
+    originals = {}
+    for f in sorted(done.iterdir()) if done.is_dir() else []:
+        a, t, m = parse_name(f.stem) if f.suffix.lower() in AUDIO_EXTS else (None, None, None)
+        if m:
+            originals[slug(f"{a} {t}")] = f
+    by_id = {s["id"]: s for s in songs}
+    for fix_file in sorted(fix_dir.glob("*.txt")):
+        left = []
+        for line in fix_file.read_text(encoding="utf-8").splitlines():
+            words = re.split(r"(?:^|\s)#\s", line, maxsplit=1)[0].split()  # "# Title" is a comment, "#intro" isn't
+            if not words:
+                continue
+            song_id, times = words[0], [w for w in words[1:] if w[0] in "@#"]
+            song, src = by_id.get(song_id), originals.get(song_id)
+            if not song or not src or not times:
+                print(f"FIX {song_id}: {'not in songs.json' if not song else 'original MP3 not in incoming/done'}, skipped")
+                left.append(line)
+                continue
+            name = re.sub(r'[\\/:*?"<>|]', "", f"{song['artist']} - {song['title']}")
+            if song.get("year"):
+                name += f" ({song['year']})"
+            target = indir / f"{name} {' '.join(times)}{src.suffix}"
+            src.replace(target)
+            del originals[song_id]
+            print(f"FIX {song['title']}: will re-do with {' '.join(times)}")
+        if left:
+            fix_file.write_text("\n".join(left) + "\n", encoding="utf-8")
+        else:
+            fix_file.unlink()
+
+
 def fmt_time(secs):
     return f"{int(secs // 60)}:{int(secs % 60):02d}"
 
@@ -333,13 +371,14 @@ def main():
 
     indir = ROOT / args.indir
     indir.mkdir(exist_ok=True)
-    files = find_inputs(indir)
-    if not files:
-        sys.exit(f"No audio files in {indir}. Name them like 'Artist - Title (Year).mp3'.")
-
     db_path = ROOT / "songs.json"
     db = json.loads(db_path.read_text(encoding="utf-8")) if db_path.exists() else {}
     db.setdefault("songs", [])
+
+    apply_fixes(ROOT / "fixes", indir, db["songs"])
+    files = find_inputs(indir)
+    if not files:
+        sys.exit(f"No audio files in {indir}. Name them like 'Artist - Title (Year).mp3'.")
 
     def save_db():
         db_path.write_text(json.dumps(db, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
