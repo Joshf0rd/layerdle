@@ -5,12 +5,17 @@
       "title": "Fireflies",
       "artist": "Owl City",
       "year": null,
+      "start": 60.0,
+      "nfnStart": 62.0,
+      "categories": [],
       "clips": [
         "songs/owl-city-fireflies/1.mp3",
         "songs/owl-city-fireflies/2.mp3",
         "songs/owl-city-fireflies/3.mp3",
-        "songs/owl-city-fireflies/4.mp3"
-      ]
+        "songs/owl-city-fireflies/4.mp3",
+        "songs/owl-city-fireflies/5.mp3"
+      ],
+      "nfn": "songs/owl-city-fireflies/nfn.mp3"
     },
     {
       "id": "basshunter-dota",
@@ -34,24 +39,34 @@
       "title": "Animals",
       "artist": "Maroon 5",
       "year": null,
+      "start": 60.0,
+      "nfnStart": 61.9,
+      "categories": [],
       "clips": [
         "songs/maroon-5-animals/1.mp3",
         "songs/maroon-5-animals/2.mp3",
         "songs/maroon-5-animals/3.mp3",
-        "songs/maroon-5-animals/4.mp3"
-      ]
+        "songs/maroon-5-animals/4.mp3",
+        "songs/maroon-5-animals/5.mp3"
+      ],
+      "nfn": "songs/maroon-5-animals/nfn.mp3"
     },
     {
       "id": "taio-cruz-break-your-heart",
       "title": "Break Your Heart",
       "artist": "Taio Cruz",
       "year": null,
+      "start": 60.0,
+      "nfnStart": 59.5,
+      "categories": [],
       "clips": [
         "songs/taio-cruz-break-your-heart/1.mp3",
         "songs/taio-cruz-break-your-heart/2.mp3",
         "songs/taio-cruz-break-your-heart/3.mp3",
-        "songs/taio-cruz-break-your-heart/4.mp3"
-      ]
+        "songs/taio-cruz-break-your-heart/4.mp3",
+        "songs/taio-cruz-break-your-heart/5.mp3"
+      ],
+      "nfn": "songs/taio-cruz-break-your-heart/nfn.mp3"
     },
     {
       "id": "b-o-b-airplanes",
@@ -93,13 +108,16 @@
       "artist": "JAY-Z",
       "year": null,
       "start": 131.5,
+      "nfnStart": 0.5,
       "categories": [],
       "clips": [
         "songs/jay-z-empire-state-of-mind/1.mp3",
         "songs/jay-z-empire-state-of-mind/2.mp3",
         "songs/jay-z-empire-state-of-mind/3.mp3",
-        "songs/jay-z-empire-state-of-mind/4.mp3"
-      ]
+        "songs/jay-z-empire-state-of-mind/4.mp3",
+        "songs/jay-z-empire-state-of-mind/5.mp3"
+      ],
+      "nfn": "songs/jay-z-empire-state-of-mind/nfn.mp3"
     },
     {
       "id": "ke-ha-tik-tok",
@@ -107,13 +125,16 @@
       "artist": "Ke$ha",
       "year": null,
       "start": 53.0,
+      "nfnStart": 51.95,
       "categories": [],
       "clips": [
         "songs/ke-ha-tik-tok/1.mp3",
         "songs/ke-ha-tik-tok/2.mp3",
         "songs/ke-ha-tik-tok/3.mp3",
-        "songs/ke-ha-tik-tok/4.mp3"
-      ]
+        "songs/ke-ha-tik-tok/4.mp3",
+        "songs/ke-ha-tik-tok/5.mp3"
+      ],
+      "nfn": "songs/ke-ha-tik-tok/nfn.mp3"
     },
     {
       "id": "lady-gaga-bad-romance",
@@ -121,13 +142,16 @@
       "artist": "Lady Gaga",
       "year": null,
       "start": 37.1,
+      "nfnStart": 38.5,
       "categories": [],
       "clips": [
         "songs/lady-gaga-bad-romance/1.mp3",
         "songs/lady-gaga-bad-romance/2.mp3",
         "songs/lady-gaga-bad-romance/3.mp3",
-        "songs/lady-gaga-bad-romance/4.mp3"
-      ]
+        "songs/lady-gaga-bad-romance/4.mp3",
+        "songs/lady-gaga-bad-romance/5.mp3"
+      ],
+      "nfn": "songs/lady-gaga-bad-romance/nfn.mp3"
     }
   ],
   "decoys": []
