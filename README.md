@@ -20,6 +20,8 @@ One-time setup: Python 3.12, ffmpeg and Demucs (`pip install "torch<2.9" "torcha
      To add an existing song to another category, drop the same file in that folder. It gets tagged, not re-processed.
    - **Clip start:** picked automatically, by matching Apple Music's 30s preview (usually the hook) or else detecting
      the chorus. To force it, add `@1m05` to the name (starts at 1:05).
+   - **Note for Note start:** the intro if it kicks in straight away, otherwise the chorus. To force it, add
+     `#intro`, `#chorus` or `#1m05` to the name, e.g. `Queen - We Will Rock You (1977) #intro.mp3`.
 2. Double-click `add_songs.cmd`. Roughly 1–2 minutes per song. When it finishes it publishes the new songs automatically.
 
 ## Files
@@ -27,6 +29,7 @@ One-time setup: Python 3.12, ffmpeg and Demucs (`pip install "torch<2.9" "torcha
 - `index.html` – the whole game
 - `service-worker.js` – offline support
 - `songs.json` – song library (the script fills it in)
-- `songs/<id>/1-4.mp3` – cumulative clips (drums → full song)
+- `songs/<id>/1-5.mp3` – Layer by Layer clips (drums → + bass → + instruments → + muffled vocals → full song)
+- `songs/<id>/nfn.mp3` – Note for Note clip (10s, vocals muffled; the game plays 1, 2, 3, 4, 5, then 10 seconds)
 - `process_songs.py`, `add_songs.cmd` – split songs with Demucs and make the clips
 - `manifest.json`, `icon-*.png` – home-screen name and icon

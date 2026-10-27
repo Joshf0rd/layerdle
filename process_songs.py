@@ -4,11 +4,14 @@ Drop audio files into ./incoming named like:
 
     Artist - Title.mp3
     Artist - Title (1999).mp3          <- adds the year (used for the hint)
-    Artist - Title (1999) @1m05.mp3    <- force the clip to start at 1:05 (@65 works too)
+    Artist - Title (1999) @1m05.mp3    <- force the layer clip to start at 1:05 (@65 works too)
+    Artist - Title (1999) #intro.mp3   <- Note for Note starts at the intro (#chorus or #1m05 also work)
 
 Without an @ time the script picks the start itself: it finds where Apple
 Music's 30s preview (usually the hook) sits in your file, and falls back to
 detecting the chorus (the loudest, most repeated section).
+Without a # the Note for Note clip starts at the intro if it kicks in
+straight away, otherwise at the start of the chorus.
 
 Put files in a subfolder to give them a category, e.g. incoming/2010s/ or
 incoming/Disney/. A song can be in several: drop an already-processed song
@@ -19,12 +22,14 @@ Then run:
     python process_songs.py
 
 For each song this splits the audio into drums / bass / other / vocals with
-Demucs, cuts the same section from each, and writes four cumulative clips:
+Demucs and writes:
 
-    songs/<id>/1.mp3  drums
-    songs/<id>/2.mp3  drums + bass
-    songs/<id>/3.mp3  drums + bass + other
-    songs/<id>/4.mp3  full song
+    songs/<id>/1.mp3    drums                      } Layer by Layer:
+    songs/<id>/2.mp3    + bass                     } the same 20s section,
+    songs/<id>/3.mp3    + other instruments        } one more layer
+    songs/<id>/4.mp3    + muffled vocals           } each time
+    songs/<id>/5.mp3    full song                  }
+    songs/<id>/nfn.mp3  10s with muffled vocals    - Note for Note (played 1s, 2s, ... 10s)
 
 and adds the song to songs.json. Processed files move to incoming/done.
 
@@ -41,12 +46,22 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-STEMS = ["drums", "bass", "other", "vocals"]
+MUFFLED = "vocals~"  # vocals through a "wall": only the low end gets through
+LAYERS = [  # Layer by Layer clips, in reveal order
+    ["drums"],
+    ["drums", "bass"],
+    ["drums", "bass", "other"],
+    ["drums", "bass", "other", MUFFLED],
+    ["drums", "bass", "other", "vocals"],
+]
+NFN_MIX = ["drums", "bass", "other", MUFFLED]
+NFN_LENGTH = 10
 AUDIO_EXTS = {".mp3", ".wav", ".m4a", ".flac", ".ogg"}
 NAME_RE = re.compile(
     r"^(?P<artist>.+?)\s+-\s+(?P<title>.+?)"
     r"(?:\s*\((?P<year>\d{4})\))?"
-    r"(?:\s*@(?P<start>[\d:m.]+))?$"
+    r"(?:\s*@(?P<start>[\d:m.]+))?"
+    r"(?:\s*#(?P<nfn>(?i:intro|chorus)|[\d:m.]+))?$"
 )
 
 
@@ -69,15 +84,21 @@ def separate(src, workdir, model):
     return workdir / model / src.stem
 
 
-def make_clip(stem_dir, layers, start, length, out):
+def make_clip(stem_dir, parts, start, length, out, fade_in=0.2, fade_out=1.5):
     cmd = ["ffmpeg", "-y", "-loglevel", "error"]
-    for stem in STEMS[:layers]:
-        cmd += ["-ss", str(start), "-t", str(length), "-i", str(stem_dir / f"{stem}.wav")]
-    inputs = "".join(f"[{i}:a]" for i in range(layers))
-    mix = f"{inputs}amix=inputs={layers}:normalize=0," if layers > 1 else inputs
-    fade_at = max(length - 1.5, 0)
-    chain = f"{mix}alimiter=limit=0.9,afade=t=in:d=0.2,afade=t=out:st={fade_at}:d=1.5[a]"
-    cmd += ["-filter_complex", chain, "-map", "[a]", "-ac", "2", "-ar", "44100", "-b:a", "128k", str(out)]
+    for part in parts:
+        cmd += ["-ss", str(start), "-t", str(length), "-i", str(stem_dir / f"{part.rstrip('~')}.wav")]
+    graph, labels = [], ""
+    for i, part in enumerate(parts):
+        if part == MUFFLED:
+            graph.append(f"[{i}:a]lowpass=f=350,lowpass=f=350,volume=1.6[m{i}]")
+            labels += f"[m{i}]"
+        else:
+            labels += f"[{i}:a]"
+    mix = f"{labels}amix=inputs={len(parts)}:normalize=0," if len(parts) > 1 else labels
+    fade_at = max(length - fade_out, 0)
+    graph.append(f"{mix}alimiter=limit=0.9,afade=t=in:d={fade_in},afade=t=out:st={fade_at}:d={fade_out}[a]")
+    cmd += ["-filter_complex", ";".join(graph), "-map", "[a]", "-ac", "2", "-ar", "44100", "-b:a", "128k", str(out)]
     subprocess.run(cmd, check=True)
 
 
@@ -188,8 +209,49 @@ def find_chorus(song, length):
     return max(best / 2 - 1.0, 0.0)  # start a beat early so the section lands inside the clip
 
 
-def auto_start(src, artist, title, length, tmp):
-    song = decode_mono(src)
+def loudness(song, hop_s=0.05):
+    """RMS loudness every `hop_s` seconds."""
+    import numpy as np
+
+    hop = int(AUTO_SR * hop_s)
+    n = len(song) // hop
+    return np.sqrt((song[: n * hop].astype(np.float64).reshape(n, hop) ** 2).mean(axis=1)), hop_s
+
+
+def intro_start(song):
+    """When the music actually starts (skips leading silence)."""
+    import numpy as np
+
+    rms, hop = loudness(song)
+    above = np.nonzero(rms > 0.1 * np.percentile(rms, 90))[0]
+    return max(above[0] * hop - 0.05, 0.0) if len(above) else 0.0
+
+
+def snap_to_onset(song, around, before=2.0, after=3.0):
+    """The moment near `around` where the music jumps up most: the downbeat a section starts on."""
+    rms, hop = loudness(song)
+    lo, hi = max(int((around - before) / hop), 10), min(int((around + after) / hop), len(rms) - 20)
+    best, best_i = 0.0, int(around / hop)
+    for i in range(lo, hi):
+        jump = rms[i : i + 20].mean() / (rms[i - 10 : i].mean() + 1e-6)  # next 1s vs previous 0.5s
+        if jump > best:
+            best, best_i = jump, i
+    return best_i * hop
+
+
+def nfn_start(song, chorus):
+    """Note for Note start: the intro if it kicks in straight away, otherwise the chorus."""
+    import numpy as np
+
+    rms, hop = loudness(song)
+    intro = intro_start(song)
+    first_2s = rms[int(intro / hop) : int(intro / hop) + 40].mean()
+    if first_2s >= 0.6 * np.median(rms):
+        return intro, "punchy intro"
+    return snap_to_onset(song, chorus), "chorus (intro is too quiet)"
+
+
+def auto_start(song, artist, title, length, tmp):
     duration = len(song) / AUTO_SR
     try:
         preview = apple_preview(artist, title, Path(tmp) / "preview.m4a")
@@ -278,28 +340,45 @@ def main():
         out_dir.mkdir(parents=True, exist_ok=True)
 
         with tempfile.TemporaryDirectory() as tmp:
+            song = decode_mono(src)
             if m["start"]:
                 start, why = to_seconds(m["start"]), "from file name"
             elif args.start is not None:
                 start, why = args.start, "from --start"
             else:
-                start, why = auto_start(src, artist, title, args.length, tmp)
-            print(f"   clip {fmt_time(start)}-{fmt_time(start + args.length)} ({why})")
+                start, why = auto_start(song, artist, title, args.length, tmp)
+            print(f"   layers clip {fmt_time(start)}-{fmt_time(start + args.length)} ({why})")
+
+            nfn = (m["nfn"] or "").lower()
+            if nfn == "intro":
+                nstart, nwhy = intro_start(song), "intro, from file name"
+            elif nfn == "chorus":
+                nstart, nwhy = snap_to_onset(song, start), "chorus, from file name"
+            elif nfn:
+                nstart, nwhy = to_seconds(nfn), "from file name"
+            else:
+                nstart, nwhy = nfn_start(song, start)
+            print(f"   note for note from {fmt_time(nstart)} ({nwhy})")
+
             # Copy to a plain name so Demucs' output folder is predictable.
             work_src = Path(tmp) / f"track{src.suffix.lower()}"
             shutil.copy(src, work_src)
             stem_dir = separate(work_src, Path(tmp) / "out", args.model)
-            for n in range(1, len(STEMS) + 1):
-                make_clip(stem_dir, n, start, args.length, out_dir / f"{n}.mp3")
+            for n, parts in enumerate(LAYERS, 1):
+                make_clip(stem_dir, parts, start, args.length, out_dir / f"{n}.mp3")
+            # The game cuts this one off after 1, 2, 3... seconds, so no fade-in to blur the first second.
+            make_clip(stem_dir, NFN_MIX, nstart, NFN_LENGTH, out_dir / "nfn.mp3", fade_in=0.01, fade_out=0.5)
 
         entry = {
             "id": song_id,
             "title": title,
             "artist": artist,
-            "year": int(m["year"]) if m["year"] else None,
+            "year": int(m["year"]) if m["year"] else (existing or {}).get("year"),
             "start": round(start, 1),
+            "nfnStart": round(nstart, 2),
             "categories": categories,
-            "clips": [f"songs/{song_id}/{n}.mp3" for n in range(1, len(STEMS) + 1)],
+            "clips": [f"songs/{song_id}/{n}.mp3" for n in range(1, len(LAYERS) + 1)],
+            "nfn": f"songs/{song_id}/nfn.mp3",
         }
         if existing:
             db["songs"][db["songs"].index(existing)] = entry

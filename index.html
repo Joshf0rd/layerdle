@@ -111,8 +111,8 @@
   .layers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
   .layer {
     display: flex; align-items: center; gap: 10px;
-    padding: 11px 14px; border-radius: 12px;
-    background: var(--panel); border: 2px solid transparent; font-size: 16px;
+    padding: 7px 14px; border-radius: 12px;
+    background: var(--panel); border: 2px solid transparent; font-size: 15px;
   }
   .layer .ic { width: 26px; text-align: center; font-size: 19px; }
   .layer .nm { flex: 1; font-weight: 700; }
@@ -133,7 +133,7 @@
   .player { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0; }
   .play {
     --p: 0;
-    position: relative; width: 104px; height: 104px;
+    position: relative; width: 88px; height: 88px;
     border-radius: 50%; border: 0; padding: 0;
     background: conic-gradient(var(--accent) calc(var(--p) * 1turn), var(--panel-2) 0);
     display: grid; place-items: center;
@@ -156,6 +156,19 @@
   .peek.on { border-style: solid; border-color: var(--gold); color: var(--text); font-size: 13px; }
 
   .controls, .award { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .controls .gap { height: 18px; } /* keep Next well away from Reveal so nobody hits Reveal by accident */
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row-2 .btn { padding: 15px 10px; font-size: 16px; color: var(--muted); }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mode {
+    text-align: left; padding: 14px; border-radius: 14px;
+    border: 2px solid transparent; background: var(--panel);
+  }
+  .mode.on { border-color: var(--accent); background: var(--panel-2); }
+  .mode .i { font-size: 24px; }
+  .mode b { display: block; font-size: 16px; margin-top: 4px; }
+  .mode span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
   .award p { margin: 0; text-align: center; font-weight: 800; font-size: 18px; }
   .award-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .award-btns .btn { padding: 18px 10px; font-size: 18px; background: var(--c); color: #14121c; }
@@ -189,12 +202,15 @@
       <img src="icon-180.png" alt="">
       <div>
         <h1 class="grad">Layerdle</h1>
-        <p class="sub">Party mode · guess the song layer by layer</p>
+        <p class="sub">Party mode · name that song</p>
       </div>
     </header>
 
     <div id="net" class="note" hidden>📴 You're offline. Only songs saved for offline will play.</div>
-    <div id="empty" class="note" hidden>No songs yet. Add some with add_songs.cmd and push them.</div>
+    <div id="empty" class="note" hidden>No songs yet. Add some with add_songs.cmd.</div>
+
+    <h2>Game mode</h2>
+    <div id="modes" class="modes"></div>
 
     <h2>How many teams?</h2>
     <div id="team-count" class="seg"></div>
@@ -225,9 +241,12 @@
     </div>
     <button id="peek" class="peek">👁 Hold to peek at the answer</button>
     <div id="controls" class="controls">
-      <button id="next" class="btn big">Next layer</button>
-      <button id="reveal" class="btn primary big">Reveal answer</button>
-      <button id="skip-song" class="link">Skip this song</button>
+      <button id="next" class="btn primary big">Next layer</button>
+      <div class="gap"></div>
+      <div class="row-2">
+        <button id="skip-song" class="btn ghost">Skip song</button>
+        <button id="reveal" class="btn ghost">Reveal answer</button>
+      </div>
     </div>
     <div id="award" class="award" hidden>
       <p>Who got it?</p>
@@ -255,8 +274,15 @@
   const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  const STAGES = [['🥁', 'Drums'], ['🎸', '+ Bass'], ['🎹', '+ Instruments'], ['🎤', '+ Vocals']];
-  const POINTS = [5, 4, 3, 2, 1]; // per layer; the last one is the hint
+  const STAGES = {
+    4: [['🥁', 'Drums'], ['🎸', '+ Bass'], ['🎹', '+ Instruments'], ['🎤', '+ Vocals']],
+    5: [['🥁', 'Drums'], ['🎸', '+ Bass'], ['🎹', '+ Instruments'], ['🔇', '+ Muffled vocals'], ['🎤', '+ Vocals']],
+  };
+  const MODES = {
+    layers: { icon: '🎚️', name: 'Layer by Layer', desc: 'Drums first, then add a layer' },
+    nfn: { icon: '⏱️', name: 'Note for Note', desc: '1 second, then 2, 3, 4, 5, 10' },
+  };
+  const NFN_SECONDS = [1, 2, 3, 4, 5, 10];
   const ROUND_OPTIONS = [5, 10, 20, 'all'];
   const TEAMS = [['Red', '#ff5c6c'], ['Blue', '#4da3ff'], ['Green', '#3ddc97'], ['Yellow', '#ffcc4d'], ['Purple', '#b18cff'], ['Orange', '#ff9a3d']];
   const teamColor = name => (TEAMS.find(([n]) => n === name) || [, '#9d98b8'])[1];
@@ -267,6 +293,7 @@
   let prefs;
   try { prefs = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { prefs = {}; }
   prefs.teams = prefs.teams || 2;
+  prefs.mode = MODES[prefs.mode] ? prefs.mode : 'layers';
   prefs.category = prefs.category || 'All songs';
   prefs.rounds = prefs.rounds || 10;
   prefs.played = prefs.played || [];
@@ -296,22 +323,25 @@
       if (r.ok) SONGS = ((await r.json()).songs || []).filter(s => s.clips && s.clips.length);
     } catch (e) {}
   }
+  // Songs processed before Note for Note existed have no nfn clip, so they only play in Layer by Layer.
+  const inMode = s => prefs.mode !== 'nfn' || !!s.nfn;
   function categories() {
-    const map = new Map();
-    SONGS.forEach(s => (s.categories || []).forEach(c => {
+    const songs = SONGS.filter(inMode), map = new Map();
+    songs.forEach(s => (s.categories || []).forEach(c => {
       if (!map.has(c)) map.set(c, []);
       map.get(c).push(s);
     }));
-    return [['All songs', SONGS], ...[...map].sort((a, b) => a[0].localeCompare(b[0]))];
+    return [['All songs', songs], ...[...map].sort((a, b) => a[0].localeCompare(b[0]))];
   }
-  const poolFor = name => (categories().find(([n]) => n === name) || ['All songs', SONGS])[1];
+  const poolFor = name => (categories().find(([n]) => n === name) || categories()[0])[1];
 
   /* ---------- Offline clips ---------- */
   const canCache = 'caches' in window;
   const abs = u => new URL(u, location.href).href;
   let cached = new Set();
   const downloads = new Map(); // category -> progress 0..1
-  const songSaved = s => s.clips.every(u => cached.has(abs(u)));
+  const songUrls = s => [...s.clips, s.nfn].filter(Boolean).map(abs); // both modes, so either works offline
+  const songSaved = s => songUrls(s).every(u => cached.has(u));
 
   async function refreshCached() {
     if (!canCache) return;
@@ -322,7 +352,7 @@
     if (!navigator.onLine) { toast('Connect to the internet to download'); return; }
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
     const cache = await caches.open(CLIP_CACHE);
-    const urls = [...new Set(poolFor(name).flatMap(s => s.clips.map(abs)))].filter(u => !cached.has(u));
+    const urls = [...new Set(poolFor(name).flatMap(songUrls))].filter(u => !cached.has(u));
     const total = urls.length || 1;
     let done = 0, failed = 0;
     downloads.set(name, 0);
@@ -347,6 +377,10 @@
   }
 
   /* ---------- Setup screen ---------- */
+  function renderModes() {
+    $('#modes').innerHTML = Object.entries(MODES).map(([id, m]) =>
+      `<button class="mode${id === prefs.mode ? ' on' : ''}" data-mode="${id}"><span class="i">${m.icon}</span><b>${m.name}</b><span>${m.desc}</span></button>`).join('');
+  }
   function renderTeams() {
     $('#team-count').innerHTML = TEAMS.map((_, i) =>
       `<button data-t="${i + 1}" class="${i + 1 === prefs.teams ? 'on' : ''}">${i + 1}</button>`).join('');
@@ -372,10 +406,17 @@
   }
   function renderSetup() {
     if (!poolFor(prefs.category).length || !categories().some(([n]) => n === prefs.category)) prefs.category = 'All songs';
-    renderTeams(); renderCats(); renderRounds();
+    renderModes(); renderTeams(); renderCats(); renderRounds();
     $('#net').hidden = navigator.onLine;
     $('#empty').hidden = SONGS.length > 0;
   }
+
+  $('#modes').addEventListener('click', e => {
+    const b = e.target.closest('button[data-mode]');
+    if (!b) return;
+    prefs.mode = b.dataset.mode;
+    savePrefs(); renderSetup();
+  });
 
   $('#team-count').addEventListener('click', e => {
     const b = e.target.closest('button[data-t]');
@@ -449,7 +490,8 @@
     cancelAnimationFrame(raf);
     setPlayUI('idle');
   }
-  // force: always (re)start; otherwise a second tap on the playing clip stops it.
+  // idx: a stage number, or 'full' for the reveal. force: always (re)start; otherwise a
+  // second tap on the playing clip stops it.
   async function playClip(idx, force) {
     const c = unlockCtx();
     const was = playing ? playing.idx : pending ? pending.idx : null;
@@ -457,20 +499,27 @@
     if (!force && was === idx) return;
     const token = pending = { idx };
     setPlayUI('loading', idx);
+    const spec = clipSpec(idx);
     let buf;
-    try { buf = await loadClip(game.song.clips[idx]); }
+    try { buf = await loadClip(spec.url); }
     catch (e) {
       if (pending === token) { pending = null; setPlayUI('idle'); toast(navigator.onLine ? 'Could not load this clip' : 'Not saved offline. Skip this song'); }
       return;
     }
     if (pending !== token) return;
     pending = null;
-    const src = c.createBufferSource();
+    const dur = Math.min(spec.dur || buf.duration, buf.duration);
+    const src = c.createBufferSource(), gain = c.createGain();
     src.buffer = buf;
-    src.connect(c.destination);
+    src.connect(gain).connect(c.destination);
+    const t = c.currentTime;
+    if (spec.dur) { // cut short (Note for Note): quick fade so it doesn't click
+      gain.gain.setValueAtTime(1, t + dur - 0.04);
+      gain.gain.linearRampToValueAtTime(0, t + dur);
+    }
     src.onended = () => { if (playing && playing.src === src) stopAudio(); };
-    src.start();
-    playing = { src, idx, start: c.currentTime, dur: buf.duration };
+    src.start(t, 0, dur);
+    playing = { src, idx, start: t, dur };
     setPlayUI('playing', idx);
     const tick = () => {
       if (!playing) return;
@@ -498,14 +547,26 @@
 
   /* ---------- Game ---------- */
   let game = null;
+  const isNfn = () => game.mode === 'nfn';
   const nClips = s => s.clips.length;
-  const nStages = s => nClips(s) + 1; // + hint stage
-  const stageMeta = (s, i) => i >= nClips(s) ? ['💡', 'Hint'] : nClips(s) === 4 ? STAGES[i] : (i === nClips(s) - 1 ? ['🎤', 'Full song'] : ['🎵', 'Layer ' + (i + 1)]);
-  const pointsAt = i => POINTS[Math.min(i, POINTS.length - 1)];
-  const currentClip = () => game.revealed ? nClips(game.song) - 1 : Math.min(game.layer, nClips(game.song) - 1);
+  const nStages = s => isNfn() ? NFN_SECONDS.length : nClips(s) + 1; // layers: + hint stage
+  const secs = n => `${n} second${n === 1 ? '' : 's'}`;
+  function stageMeta(s, i) {
+    if (isNfn()) return ['⏱️', secs(NFN_SECONDS[i])];
+    if (i >= nClips(s)) return ['💡', 'Hint'];
+    return (STAGES[nClips(s)] || [])[i] || (i === nClips(s) - 1 ? ['🎤', 'Full song'] : ['🎵', 'Layer ' + (i + 1)]);
+  }
+  const pointsAt = i => nStages(game.song) - i; // first stage is worth the most, last is worth 1
+  const currentClip = () => game.revealed ? 'full' : isNfn() ? game.layer : Math.min(game.layer, nClips(game.song) - 1);
+  function clipSpec(idx) {
+    const s = game.song;
+    if (idx === 'full') return { url: s.clips[nClips(s) - 1] };
+    if (isNfn()) return { url: s.nfn, dur: NFN_SECONDS[idx] };
+    return { url: s.clips[Math.min(idx, nClips(s) - 1)] };
+  }
 
   function buildQueue() {
-    let pool = poolFor(prefs.category);
+    let pool = poolFor(prefs.category); // already limited to songs that work in the chosen mode
     if (!navigator.onLine) pool = pool.filter(songSaved);
     const seen = id => prefs.played.indexOf(id);
     const fresh = shuffle(pool.filter(s => seen(s.id) < 0));
@@ -518,7 +579,7 @@
     const queue = buildQueue();
     if (!queue.length) { toast(navigator.onLine ? 'No songs in this category' : 'No songs saved offline'); return; }
     unlockCtx();
-    game = { queue, i: 0, scores: Object.fromEntries(TEAMS.slice(0, prefs.teams).map(([n]) => [n, 0])) };
+    game = { mode: prefs.mode, queue, i: 0, scores: Object.fromEntries(TEAMS.slice(0, prefs.teams).map(([n]) => [n, 0])) };
     keepAwake(true);
     show('round');
     startRound();
@@ -530,9 +591,11 @@
     game.revealed = false;
     renderRound();
     playClip(0, true);
+    // Warm up what's likely next: this song's following stage and reveal, and the next song's first clip.
     const next = game.queue[game.i + 1];
-    if (next) loadClip(next.clips[0]).catch(() => {});
-    loadClip(game.song.clips[1] || game.song.clips[0]).catch(() => {});
+    if (next) loadClip(isNfn() ? next.nfn : next.clips[0]).catch(() => {});
+    if (!isNfn()) loadClip(clipSpec(1).url).catch(() => {});
+    loadClip(clipSpec('full').url).catch(() => {});
   }
 
   function renderRound() {
@@ -543,11 +606,11 @@
     $('#layers').innerHTML = Array.from({ length: n }, (_, i) => {
       const [icon, name] = stageMeta(song, i);
       const cls = revealed ? (i <= layer ? '' : 'locked') : i < layer ? '' : i === layer ? 'current' : 'locked';
-      const playable = i < nClips(song) && (revealed || i <= layer);
+      const playable = (isNfn() || i < nClips(song)) && (revealed || i <= layer);
       return `<li class="layer ${cls}" data-i="${playable ? i : ''}"><span class="ic">${icon}</span><span class="nm">${name}</span><span class="pt">${pointsAt(i)} pt${pointsAt(i) === 1 ? '' : 's'}</span></li>`;
     }).join('');
 
-    const atHint = layer >= nClips(song);
+    const atHint = !isNfn() && layer >= nClips(song);
     $('#hint').hidden = !atHint || revealed;
     $('#hint').innerHTML = '💡 ' + [song.year ? `Released <b>${esc(song.year)}</b>` : '', `Artist starts with <b>“${esc((song.artist || '?')[0])}”</b>`].filter(Boolean).join(' · ');
 
@@ -555,14 +618,17 @@
     $('#answer .t').textContent = song.title;
     $('#answer .m').textContent = [song.artist, song.year].filter(Boolean).join(' · ');
 
-    $('#play-label').textContent = revealed ? 'Full song' : atHint ? 'Full song + hint' : layer === 0 ? 'Drums only' : stageMeta(song, layer)[1].replace('+ ', 'Added ');
+    $('#play-label').textContent = revealed ? 'Full song'
+      : isNfn() ? stageMeta(song, layer)[1]
+      : atHint ? 'Full song + hint' : layer === 0 ? 'Drums only' : stageMeta(song, layer)[1].replace('+ ', 'Added ');
 
     $('#controls').hidden = revealed;
     $('#peek').hidden = revealed;
     hidePeek();
     $('#next').disabled = layer >= n - 1;
-    $('#next').textContent = layer >= n - 1 ? 'No more layers' : layer === nClips(song) - 1 ? 'Show hint ➜' : `Add ${stageMeta(song, layer + 1)[1].replace('+ ', '').toLowerCase()} ➜`;
-    $('#reveal').textContent = `Reveal answer`;
+    $('#next').textContent = layer >= n - 1 ? (isNfn() ? 'That was the longest' : 'No more layers')
+      : isNfn() ? `Play ${secs(NFN_SECONDS[layer + 1])} ➜`
+      : layer === nClips(song) - 1 ? 'Show hint ➜' : `Add ${stageMeta(song, layer + 1)[1].replace('+ ', '').toLowerCase()} ➜`;
 
     $('#award').hidden = !revealed;
     const pts = pointsAt(layer);

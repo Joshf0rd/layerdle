@@ -17,12 +17,17 @@
       "title": "DotA",
       "artist": "Basshunter",
       "year": null,
+      "start": 60.0,
+      "nfnStart": 62.95,
+      "categories": [],
       "clips": [
         "songs/basshunter-dota/1.mp3",
         "songs/basshunter-dota/2.mp3",
         "songs/basshunter-dota/3.mp3",
-        "songs/basshunter-dota/4.mp3"
-      ]
+        "songs/basshunter-dota/4.mp3",
+        "songs/basshunter-dota/5.mp3"
+      ],
+      "nfn": "songs/basshunter-dota/nfn.mp3"
     },
     {
       "id": "maroon-5-animals",
@@ -54,13 +59,16 @@
       "artist": "B.o.B",
       "year": null,
       "start": 43.0,
+      "nfnStart": 41.6,
       "categories": [],
       "clips": [
         "songs/b-o-b-airplanes/1.mp3",
         "songs/b-o-b-airplanes/2.mp3",
         "songs/b-o-b-airplanes/3.mp3",
-        "songs/b-o-b-airplanes/4.mp3"
-      ]
+        "songs/b-o-b-airplanes/4.mp3",
+        "songs/b-o-b-airplanes/5.mp3"
+      ],
+      "nfn": "songs/b-o-b-airplanes/nfn.mp3"
     },
     {
       "id": "bruno-mars-just-the-way-you-are",
@@ -68,13 +76,16 @@
       "artist": "Bruno Mars",
       "year": null,
       "start": 151.0,
+      "nfnStart": 152.25,
       "categories": [],
       "clips": [
         "songs/bruno-mars-just-the-way-you-are/1.mp3",
         "songs/bruno-mars-just-the-way-you-are/2.mp3",
         "songs/bruno-mars-just-the-way-you-are/3.mp3",
-        "songs/bruno-mars-just-the-way-you-are/4.mp3"
-      ]
+        "songs/bruno-mars-just-the-way-you-are/4.mp3",
+        "songs/bruno-mars-just-the-way-you-are/5.mp3"
+      ],
+      "nfn": "songs/bruno-mars-just-the-way-you-are/nfn.mp3"
     },
     {
       "id": "jay-z-empire-state-of-mind",
