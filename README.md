@@ -24,9 +24,20 @@ One-time setup: Python 3.12, ffmpeg and Demucs (`pip install "torch<2.9" "torcha
      `#intro`, `#chorus` or `#1m05` to the name, e.g. `Queen - We Will Rock You (1977) #intro.mp3`.
 2. Double-click `add_songs.cmd`. Roughly 1–2 minutes per song. When it finishes it publishes the new songs automatically.
 
+Downloaded names like `Adele – Someone Like You (Lyrics).mp3` are fine: dashes, "(Lyrics)"/"(Official Video)" junk,
+emoji and `ft.` features are tidied automatically.
+
+## Fixing a bad clip
+
+Open **Review clips** (bottom of the setup screen, or `/review.html`) to play every song's clips. If one starts in the
+wrong place, tap **Fix this clip**, type the right time and copy the file name it makes. Rename the song's MP3 in
+`incoming\done` to that name, move it to `incoming` and run `add_songs.cmd`. A name with `@` or `#` re-does a song
+that's already in; the start time you didn't give is kept.
+
 ## Files
 
 - `index.html` – the whole game
+- `review.html` – clip review page
 - `service-worker.js` – offline support
 - `songs.json` – song library (the script fills it in)
 - `songs/<id>/1-5.mp3` – Layer by Layer clips (drums → + bass → + instruments → + muffled vocals → full song)

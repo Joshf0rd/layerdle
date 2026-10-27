@@ -357,7 +357,9 @@ def main():
         song_id = slug(f"{artist} {title}")
         existing = next((s for s in db["songs"] if s["id"] == song_id), None)
         categories = sorted(set((existing or {}).get("categories", [])) | ({category} if category else set()))
-        if existing and not args.force:
+        # A time in the name (from review.html's "Fix this clip") re-does a song that's already in.
+        redo = existing if existing and (m["start"] or m["nfn"]) else None
+        if existing and not args.force and not redo:
             if categories != existing.get("categories", []):
                 existing["categories"] = categories
                 save_db()
@@ -377,6 +379,8 @@ def main():
                 start, why = to_seconds(m["start"]), "from file name"
             elif args.start is not None:
                 start, why = args.start, "from --start"
+            elif redo and redo.get("start") is not None:
+                start, why = redo["start"], "kept"
             else:
                 start, why = auto_start(song, artist, title, args.length, tmp)
             print(f"   layers clip {fmt_time(start)}-{fmt_time(start + args.length)} ({why})")
@@ -388,6 +392,8 @@ def main():
                 nstart, nwhy = snap_to_onset(song, start), "chorus, from file name"
             elif nfn:
                 nstart, nwhy = to_seconds(nfn), "from file name"
+            elif redo and redo.get("nfnStart") is not None:
+                nstart, nwhy = redo["nfnStart"], "kept"
             else:
                 nstart, nwhy = nfn_start(song, start)
             print(f"   note for note from {fmt_time(nstart)} ({nwhy})")

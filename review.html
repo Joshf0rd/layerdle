@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0d14">
+<link rel="icon" href="icon-180.png">
+<title>Clip Review</title>
+<style>
+  :root {
+    --bg: #0e0d14;
+    --panel: #1a1826;
+    --panel-2: #24213a;
+    --line: #322e4d;
+    --text: #f3f1ff;
+    --muted: #9d98b8;
+    --accent: #ff5c8a;
+    --accent-2: #7c5cff;
+    --ok: #3ddc97;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  [hidden] { display: none !important; }
+
+  .app {
+    max-width: 640px; margin: 0 auto;
+    padding: calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 24px);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -0.5px; }
+  a { color: var(--muted); }
+  .sub { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .how { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 4px 14px; font-size: 14px; color: var(--muted); }
+  .how summary { cursor: pointer; padding: 8px 0; color: var(--text); font-weight: 700; }
+  .how ol { margin: 0 0 10px; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  code { background: var(--panel-2); border-radius: 6px; padding: 1px 6px; color: var(--text); font-size: 13px; word-break: break-all; }
+
+  .filters { display: grid; grid-template-columns: 1fr auto; gap: 8px; position: sticky; top: 0; background: var(--bg); padding: 6px 0; z-index: 1; }
+  .filters input, .filters select { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; min-width: 0; }
+  .count { color: var(--muted); font-size: 13px; }
+
+  .songs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .song { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .song .t { font-weight: 800; font-size: 17px; }
+  .song .a { color: var(--muted); font-size: 14px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; }
+  .meta span { background: var(--panel-2); border-radius: 999px; padding: 3px 9px; color: var(--muted); }
+  .meta .cat { color: var(--text); }
+
+  .clips { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .clips button {
+    border: 1px solid var(--line); background: var(--panel-2); border-radius: 10px;
+    padding: 8px 0 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 18px;
+  }
+  .clips button small { font-size: 11px; color: var(--muted); }
+  .clips button.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .clips button.nfn { border-style: dashed; }
+
+  .fix-toggle { align-self: flex-start; border: 0; background: transparent; color: var(--muted); padding: 2px 0; font-size: 14px; text-decoration: underline; }
+  .fix { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .fix label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+  .fix input { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; width: 100%; min-width: 0; }
+  .fix .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .out { display: flex; gap: 8px; align-items: center; }
+  .out code { flex: 1; padding: 8px; }
+  .copy { border: 0; border-radius: 10px; padding: 9px 14px; font-weight: 800; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .err { color: var(--accent); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <h1>Clip review</h1>
+    <a href="./">Back to game</a>
+  </div>
+  <p class="sub">Play every song's clips to check the right part of the song was picked.</p>
+
+  <details class="how">
+    <summary>How to fix a bad clip</summary>
+    <ol>
+      <li>Listen to the full song and note where the clip should start, e.g. <code>1:05</code>.</li>
+      <li>Tap <b>Fix this clip</b> on the song, type the time, and copy the file name it makes.</li>
+      <li>On the PC, find the song's MP3 in <code>incoming\done</code>, rename it to that name and move it into <code>incoming</code>.</li>
+      <li>Double-click <code>add_songs.cmd</code>. It re-makes that song's clips and publishes them.</li>
+    </ol>
+  </details>
+
+  <div class="filters">
+    <input id="q" type="search" placeholder="Search songs or artists" autocomplete="off">
+    <select id="cat"></select>
+  </div>
+  <div id="count" class="count"></div>
+  <ol id="songs" class="songs"></ol>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const LAYER_ICONS = [['🥁', 'Drums'], ['🎸', 'Bass'], ['🎹', 'Instr'], ['🔇', 'Muffled'], ['🎤', 'Full']];
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+  let SONGS = [];
+  const audio = new Audio();
+  let playing = null; // the button that's playing
+
+  // "1:05", "1m05", "65" -> "1m05" for the file name; "" if blank; null if unreadable.
+  function toOverride(v) {
+    v = v.trim().toLowerCase();
+    if (!v) return '';
+    const m = v.match(/^(\d+)\s*[:m.]\s*(\d{1,2})$/) || v.match(/^()(\d+)$/);
+    if (!m) return null;
+    const secs = (+m[1] || 0) * 60 + +m[2];
+    return `${Math.floor(secs / 60)}m${String(secs % 60).padStart(2, '0')}`;
+  }
+  const safeName = s => s.replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ').trim();
+
+  function render() {
+    const q = $('#q').value.trim().toLowerCase(), cat = $('#cat').value;
+    const list = SONGS.filter(s =>
+      (!cat || (s.categories || []).includes(cat)) &&
+      (!q || `${s.title} ${s.artist}`.toLowerCase().includes(q)));
+    $('#count').textContent = `${list.length} of ${SONGS.length} songs`;
+    $('#songs').innerHTML = list.map(s => `
+      <li class="song" data-id="${esc(s.id)}">
+        <div><div class="t">${esc(s.title)}</div><div class="a">${esc(s.artist)}${s.year ? ' · ' + esc(s.year) : ''}</div></div>
+        <div class="meta">
+          ${s.start != null ? `<span>Clip from ${fmt(s.start)}</span>` : ''}
+          ${s.nfnStart != null ? `<span>Note for Note from ${fmt(s.nfnStart)}</span>` : ''}
+          ${(s.categories || []).map(c => `<span class="cat">${esc(c)}</span>`).join('')}
+        </div>
+        <div class="clips">
+          ${s.clips.map((u, i) => `<button data-url="${esc(u)}" title="${LAYER_ICONS[i] ? LAYER_ICONS[i][1] : ''}">${LAYER_ICONS[i] ? LAYER_ICONS[i][0] : i + 1}<small>${LAYER_ICONS[i] ? LAYER_ICONS[i][1] : 'Clip ' + (i + 1)}</small></button>`).join('')}
+          ${s.nfn ? `<button class="nfn" data-url="${esc(s.nfn)}" title="Note for Note">⏱️<small>NfN</small></button>` : ''}
+        </div>
+        <button class="fix-toggle">Fix this clip</button>
+        <div class="fix" hidden>
+          <div class="row">
+            <label>Clip start<input class="f-start" placeholder="e.g. 1:05" inputmode="numeric"></label>
+            <label>Note for Note start<input class="f-nfn" placeholder="1:05, intro or chorus"></label>
+          </div>
+          <div class="err" hidden></div>
+          <div class="out"><code class="name"></code><button class="copy">Copy</button></div>
+        </div>
+      </li>`).join('');
+  }
+
+  function updateFix(li) {
+    const s = SONGS.find(x => x.id === li.dataset.id);
+    const start = toOverride(li.querySelector('.f-start').value);
+    const rawNfn = li.querySelector('.f-nfn').value.trim().toLowerCase();
+    const nfn = ['intro', 'chorus'].includes(rawNfn) ? rawNfn : toOverride(rawNfn);
+    const err = li.querySelector('.err');
+    err.hidden = start !== null && nfn !== null;
+    err.textContent = 'Use a time like 1:05 (or intro / chorus for Note for Note).';
+    const parts = [safeName(`${s.artist} - ${s.title}`)];
+    if (s.year) parts.push(`(${s.year})`);
+    if (start) parts.push(`@${start}`);
+    if (nfn) parts.push(`#${nfn}`);
+    li.querySelector('.name').textContent = (start || nfn) ? parts.join(' ') + '.mp3' : 'Type a time above';
+    li.querySelector('.copy').disabled = !(start || nfn) || !err.hidden;
+  }
+
+  $('#songs').addEventListener('click', e => {
+    const clip = e.target.closest('.clips button');
+    if (clip) {
+      const same = playing === clip;
+      audio.pause();
+      if (playing) playing.classList.remove('on');
+      playing = null;
+      if (same) return;
+      audio.src = clip.dataset.url;
+      audio.play().catch(() => {});
+      playing = clip;
+      clip.classList.add('on');
+      return;
+    }
+    const li = e.target.closest('.song');
+    if (e.target.closest('.fix-toggle')) {
+      const fix = li.querySelector('.fix');
+      fix.hidden = !fix.hidden;
+      if (!fix.hidden) { updateFix(li); li.querySelector('.f-start').focus(); }
+      return;
+    }
+    const copy = e.target.closest('.copy');
+    if (copy) {
+      navigator.clipboard.writeText(li.querySelector('.name').textContent)
+        .then(() => { copy.textContent = 'Copied'; setTimeout(() => copy.textContent = 'Copy', 1500); })
+        .catch(() => {});
+    }
+  });
+  $('#songs').addEventListener('input', e => { if (e.target.closest('.fix')) updateFix(e.target.closest('.song')); });
+  audio.addEventListener('ended', () => { if (playing) playing.classList.remove('on'); playing = null; });
+  $('#q').addEventListener('input', render);
+  $('#cat').addEventListener('change', render);
+
+  fetch('songs.json', { cache: 'no-cache' }).then(r => r.json()).then(d => {
+    SONGS = (d.songs || []).filter(s => s.clips && s.clips.length)
+      .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }));
+    const cats = [...new Set(SONGS.flatMap(s => s.categories || []))].sort();
+    $('#cat').innerHTML = `<option value="">All songs</option>` + cats.map(c => `<option>${esc(c)}</option>`).join('');
+    render();
+  }).catch(() => { $('#count').textContent = 'Could not load songs.json'; });
+})();
+</script>
+</body>
+</html>
