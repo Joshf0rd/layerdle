@@ -43,6 +43,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -63,6 +64,37 @@ NAME_RE = re.compile(
     r"(?:\s*@(?P<start>[\d:m.]+))?"
     r"(?:\s*#(?P<nfn>(?i:intro|chorus)|[\d:m.]+))?$"
 )
+# Downloader junk like "(Lyrics)", "[Official Video]", "(Audio)". Lyric text tacked on after it goes too.
+JUNK_RE = re.compile(
+    r"\s*[(\[][^)\]]*\b(?:lyrics?|official|video|audio|visuali[sz]er|hd|hq|4k|remaster(?:ed)?|explicit|clean|mv)\b[^)\]]*[)\]]"
+    r"(?:(?!\s*(?:ft|feat|featuring)\b)[^(@#]*)?",
+    re.I,
+)
+FEAT_RE = re.compile(r"\s*\(?\b(?:ft|feat|featuring)\b\.?\s+([^()]+?)\)?\s*$", re.I)
+
+
+def clean_stem(stem):
+    """Tidy a downloaded file name so NAME_RE can read it."""
+    stem = "".join(c for c in stem if unicodedata.category(c) != "So")  # emoji like 🎵
+    stem = re.sub(r"\s*(?:[–—‒−]|_-_)\s*", " - ", stem, count=1)  # en/em dashes
+    stem = re.sub(r"(?<=[A-Za-z])_(?=[A-Za-z])", "'", stem)  # Windows turns ' into _ (Can_t)
+    stem = re.sub(r"@(?=[A-Za-z])", "", stem)  # @eminem
+    stem = JUNK_RE.sub("", stem)
+    stem = re.sub(r"\s+(?:ll\s+|\|\s*)?lyrics?(?=\s*(?:\(\d{4}\)|@|#|$))", "", stem, flags=re.I)
+    return re.sub(r"\s{2,}", " ", stem).strip()
+
+
+def parse_name(stem):
+    """Artist, title and the NAME_RE match for a file name; features move to the artist."""
+    m = NAME_RE.match(clean_stem(stem))
+    if not m:
+        return None, None, None
+    artist, title = m["artist"].strip(), m["title"].strip()
+    feat = FEAT_RE.search(title)
+    if feat:
+        title = title[: feat.start()].strip()
+        artist = f"{artist} ft. {feat[1].strip()}"
+    return artist, title, m
 
 
 def to_seconds(text):
@@ -317,11 +349,10 @@ def main():
         src.replace(done / src.name)
 
     for src, category in files:
-        m = NAME_RE.match(src.stem)
+        artist, title, m = parse_name(src.stem)
         if not m:
             print(f"SKIP {src.name}: name it 'Artist - Title.mp3'")
             continue
-        artist, title = m["artist"].strip(), m["title"].strip()
         song_id = slug(f"{artist} {title}")
         existing = next((s for s in db["songs"] if s["id"] == song_id), None)
         categories = sorted(set((existing or {}).get("categories", [])) | ({category} if category else set()))
