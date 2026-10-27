@@ -662,6 +662,40 @@
         "songs/twenty-one-pilots-stressed-out/5.mp3"
       ],
       "nfn": "songs/twenty-one-pilots-stressed-out/nfn.mp3"
+    },
+    {
+      "id": "adele-someone-like-you",
+      "title": "Someone Like You",
+      "artist": "Adele",
+      "year": null,
+      "start": 30.0,
+      "nfnStart": 32.25,
+      "categories": [],
+      "clips": [
+        "songs/adele-someone-like-you/1.mp3",
+        "songs/adele-someone-like-you/2.mp3",
+        "songs/adele-someone-like-you/3.mp3",
+        "songs/adele-someone-like-you/4.mp3",
+        "songs/adele-someone-like-you/5.mp3"
+      ],
+      "nfn": "songs/adele-someone-like-you/nfn.mp3"
+    },
+    {
+      "id": "ed-sheeran-shape-of-you",
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "year": null,
+      "start": 43.0,
+      "nfnStart": 0.0,
+      "categories": [],
+      "clips": [
+        "songs/ed-sheeran-shape-of-you/1.mp3",
+        "songs/ed-sheeran-shape-of-you/2.mp3",
+        "songs/ed-sheeran-shape-of-you/3.mp3",
+        "songs/ed-sheeran-shape-of-you/4.mp3",
+        "songs/ed-sheeran-shape-of-you/5.mp3"
+      ],
+      "nfn": "songs/ed-sheeran-shape-of-you/nfn.mp3"
     }
   ],
   "decoys": []
