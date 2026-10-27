@@ -164,6 +164,38 @@
     -webkit-touch-callout: none; touch-action: none;
   }
   .peek.on { border-style: solid; border-color: var(--gold); color: var(--text); font-size: 13px; }
+  .tools { display: flex; gap: 8px; justify-content: center; }
+  .tools .peek { min-width: 0; flex: 1; align-self: stretch; }
+  .guess-open {
+    flex: none; border: 1px solid var(--accent-2); background: var(--panel-2);
+    border-radius: 999px; padding: 10px 18px; font-size: 15px; font-weight: 700;
+  }
+
+  /* Type-a-guess sheet: pinned to the top so the iPhone keyboard doesn't cover it */
+  .sheet-bg { position: fixed; inset: 0; background: rgba(5, 4, 10, 0.7); z-index: 10; }
+  .sheet {
+    position: fixed; left: 0; right: 0; top: 0; z-index: 11;
+    max-width: 520px; margin: 0 auto;
+    background: var(--panel); border: 1px solid var(--line); border-top: 0; border-radius: 0 0 20px 20px;
+    padding: calc(env(safe-area-inset-top) + 14px) 16px 16px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .sheet-top { display: flex; justify-content: space-between; align-items: center; font-weight: 800; }
+  .sheet form { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+  .sheet input {
+    min-width: 0; background: var(--bg); color: var(--text); border: 2px solid var(--line); border-radius: 12px;
+    padding: 13px 12px; font: inherit; font-size: 17px; /* 16px+ stops iOS zooming in */
+  }
+  .sheet input:focus { outline: none; border-color: var(--accent-2); }
+  .sheet .btn { padding: 13px 18px; }
+  .guess-msg { min-height: 20px; font-size: 15px; font-weight: 700; color: var(--muted); }
+  .guess-msg.no { color: var(--accent); }
+  .guess-msg.close { color: var(--gold); }
+  .guess-tries { display: flex; flex-wrap: wrap; gap: 6px; }
+  .guess-tries span { background: var(--panel-2); border-radius: 999px; padding: 4px 10px; font-size: 13px; color: var(--muted); text-decoration: line-through; }
+  .sheet.shake { animation: shake 0.35s; }
+  @keyframes shake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+  .answer .ok { color: var(--ok); font-weight: 800; font-size: 15px; margin-bottom: 4px; }
 
   .controls, .award { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
   .controls .gap { height: 18px; } /* keep Next well away from Reveal so nobody hits Reveal by accident */
@@ -255,12 +287,15 @@
     <div id="scorebar" class="scorebar"></div>
     <ol id="layers" class="layers"></ol>
     <div id="hint" class="hint" hidden></div>
-    <div id="answer" class="answer" hidden><div class="t"></div><div class="m"></div></div>
+    <div id="answer" class="answer" hidden><div class="ok" hidden></div><div class="t"></div><div class="m"></div></div>
     <div class="player">
       <button id="play" class="play" aria-label="Play"><span id="play-icon">▶</span></button>
       <div id="play-label" class="play-label"></div>
     </div>
-    <button id="peek" class="peek">👁 Hold to peek at the answer</button>
+    <div id="tools" class="tools">
+      <button id="peek" class="peek">👁 Hold to peek</button>
+      <button id="guess-open" class="guess-open">⌨️ Guess</button>
+    </div>
     <div id="controls" class="controls">
       <button id="next" class="btn primary big">Next layer</button>
       <div class="gap"></div>
@@ -285,6 +320,20 @@
       <button id="home" class="btn ghost big">Change setup</button>
     </div>
   </section>
+</div>
+
+<div id="sheet-bg" class="sheet-bg" hidden></div>
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-top">
+    <span>Type the song title</span>
+    <span><button id="guess-play" class="link">▶ Replay</button><button id="guess-close" class="link">✕</button></span>
+  </div>
+  <form id="guess-form">
+    <input id="guess-input" type="text" placeholder="e.g. bad romance" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+    <button class="btn primary">Guess</button>
+  </form>
+  <div id="guess-msg" class="guess-msg">Just the title. Small typos are fine.</div>
+  <div id="guess-tries" class="guess-tries"></div>
 </div>
 
 <div id="toast" class="toast" hidden></div>
@@ -638,7 +687,7 @@
     const g = savedGame();
     if (!g) { renderResume(); return; }
     unlockCtx();
-    game = { ...g, song: g.queue[g.i] };
+    game = { ...g, song: g.queue[g.i], guessed: '', tries: [] };
     keepAwake(true);
     show('round');
     renderRound();
@@ -659,6 +708,8 @@
     game.song = game.queue[game.i];
     game.layer = 0;
     game.revealed = false;
+    game.guessed = '';
+    game.tries = [];
     saveGame();
     renderRound();
     playClip(0, true);
@@ -686,6 +737,8 @@
     $('#hint').innerHTML = '💡 ' + [song.year ? `Released <b>${esc(song.year)}</b>` : '', `Artist starts with <b>“${esc((song.artist || '?')[0])}”</b>`].filter(Boolean).join(' · ');
 
     $('#answer').hidden = !revealed;
+    $('#answer .ok').hidden = !game.guessed;
+    $('#answer .ok').textContent = `✓ “${game.guessed}” is right!`;
     $('#answer .t').textContent = song.title;
     $('#answer .m').textContent = [song.artist, song.year].filter(Boolean).join(' · ');
 
@@ -694,7 +747,7 @@
       : atHint ? 'Full song + hint' : layer === 0 ? 'Drums only' : stageMeta(song, layer)[1].replace('+ ', 'Added ');
 
     $('#controls').hidden = revealed;
-    $('#peek').hidden = revealed;
+    $('#tools').hidden = revealed;
     hidePeek();
     $('#next').disabled = layer >= n - 1;
     $('#next').textContent = layer >= n - 1 ? (isNfn() ? 'That was the longest' : 'No more layers')
@@ -751,7 +804,7 @@
     if (li && li.dataset.i !== '') playClip(+li.dataset.i);
   });
   // Hold to peek: the answer shows only while a finger is on the button.
-  const PEEK_LABEL = '👁 Hold to peek at the answer';
+  const PEEK_LABEL = '👁 Hold to peek';
   function showPeek(e) {
     e.preventDefault();
     try { $('#peek').setPointerCapture(e.pointerId); } catch (err) {} // a small finger slide shouldn't hide it
@@ -766,6 +819,82 @@
   $('#peek').addEventListener('pointerdown', showPeek);
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => $('#peek').addEventListener(t, hidePeek));
   $('#peek').addEventListener('contextmenu', e => e.preventDefault());
+
+  /* ---------- Type a guess: just the title, small typos are fine ---------- */
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/&/g, ' and ').replace(/\$/g, 's').replace(/['’`]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ').replace(/^the /, '').replace(/ck/g, 'k').trim(); // "tick tock" = "tik tok"
+  // The title as typed people would know it: also without "(from A Star Is Born)", "- Remix", "ft. X" etc.
+  function titleForms(title) {
+    const plain = title.replace(/\s*[([].*?[)\]]/g, '').replace(/\s+-\s+.*$/, '').replace(/\s+(ft|feat|featuring)\b.*$/i, '');
+    return [...new Set([title, plain].map(norm).filter(Boolean))];
+  }
+  function editDistance(a, b) {
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++)
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+  // 1 = exact. Spaces are ignored, so "tiktok" = "tik tok".
+  const similarity = (g, t) => {
+    g = g.replace(/ /g, ''); t = t.replace(/ /g, '');
+    return 1 - editDistance(g, t) / Math.max(g.length, t.length, 1);
+  };
+  function checkGuess(guess) {
+    const { title, artist = '' } = game.song;
+    // Allow the artist in the guess ("roar by katy perry"): drop the song's own artist words.
+    const artistWords = new Set(norm(artist).split(' ').concat('by', 'ft', 'feat'));
+    const titleWords = new Set(titleForms(title).join(' ').split(' '));
+    const kept = norm(guess).split(' ').filter(w => titleWords.has(w) || !artistWords.has(w)).join(' ');
+    const score = Math.max(0, ...titleForms(title).map(t => similarity(kept || norm(guess), t)));
+    const short = norm(title).replace(/ /g, '').length <= 4; // "Roar": one wrong letter is a different word
+    return score >= (short ? 0.99 : 0.75) ? 'yes' : score >= 0.55 ? 'close' : 'no';
+  }
+
+  function openGuess() {
+    $('#guess-tries').innerHTML = game.tries.map(t => `<span>${esc(t)}</span>`).join('');
+    $('#guess-msg').className = 'guess-msg';
+    $('#guess-msg').textContent = 'Just the title. Small typos are fine.';
+    $('#guess-input').value = '';
+    $('#sheet').hidden = $('#sheet-bg').hidden = false;
+    $('#guess-input').focus();
+  }
+  function closeGuess() {
+    $('#guess-input').blur();
+    $('#sheet').hidden = $('#sheet-bg').hidden = true;
+  }
+  $('#guess-open').addEventListener('click', openGuess);
+  $('#guess-close').addEventListener('click', closeGuess);
+  $('#guess-play').addEventListener('click', () => { playClip(currentClip(), true); $('#guess-input').focus(); });
+  $('#sheet-bg').addEventListener('click', closeGuess);
+  $('#guess-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const guess = $('#guess-input').value.trim();
+    if (!guess || !game || game.revealed) return;
+    const result = checkGuess(guess);
+    if (result === 'yes') {
+      game.guessed = guess;
+      closeGuess();
+      reveal();
+      return;
+    }
+    const msg = $('#guess-msg');
+    if (result === 'close') {
+      msg.className = 'guess-msg close';
+      msg.textContent = '🤏 So close! Check the spelling.';
+    } else {
+      msg.className = 'guess-msg no';
+      msg.textContent = '❌ Nope, not that one.';
+      game.tries.push(guess);
+      $('#guess-tries').innerHTML = game.tries.map(t => `<span>${esc(t)}</span>`).join('');
+      $('#guess-input').value = '';
+    }
+    $('#sheet').classList.remove('shake'); void $('#sheet').offsetWidth; $('#sheet').classList.add('shake');
+  });
 
   $('#next').addEventListener('click', nextLayer);
   $('#reveal').addEventListener('click', reveal);
