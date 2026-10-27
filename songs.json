@@ -152,6 +152,516 @@
         "songs/lady-gaga-bad-romance/5.mp3"
       ],
       "nfn": "songs/lady-gaga-bad-romance/nfn.mp3"
+    },
+    {
+      "id": "eminem-love-the-way-you-lie-lyrics-ft-rihanna",
+      "title": "Love The Way You Lie (Lyrics) ft. @rihanna",
+      "artist": "@eminem",
+      "year": null,
+      "start": 90.0,
+      "nfnStart": 91.0,
+      "categories": [],
+      "clips": [
+        "songs/eminem-love-the-way-you-lie-lyrics-ft-rihanna/1.mp3",
+        "songs/eminem-love-the-way-you-lie-lyrics-ft-rihanna/2.mp3",
+        "songs/eminem-love-the-way-you-lie-lyrics-ft-rihanna/3.mp3",
+        "songs/eminem-love-the-way-you-lie-lyrics-ft-rihanna/4.mp3",
+        "songs/eminem-love-the-way-you-lie-lyrics-ft-rihanna/5.mp3"
+      ],
+      "nfn": "songs/eminem-love-the-way-you-lie-lyrics-ft-rihanna/nfn.mp3"
+    },
+    {
+      "id": "adele-rolling-in-the-deep-ll-lyrics",
+      "title": "Rolling in the deep ll LYRICS",
+      "artist": "adele",
+      "year": null,
+      "start": 30.4,
+      "nfnStart": 33.3,
+      "categories": [],
+      "clips": [
+        "songs/adele-rolling-in-the-deep-ll-lyrics/1.mp3",
+        "songs/adele-rolling-in-the-deep-ll-lyrics/2.mp3",
+        "songs/adele-rolling-in-the-deep-ll-lyrics/3.mp3",
+        "songs/adele-rolling-in-the-deep-ll-lyrics/4.mp3",
+        "songs/adele-rolling-in-the-deep-ll-lyrics/5.mp3"
+      ],
+      "nfn": "songs/adele-rolling-in-the-deep-ll-lyrics/nfn.mp3"
+    },
+    {
+      "id": "ariana-grande-thank-u-next-official-lyric-video",
+      "title": "thank u, next (Official Lyric Video)",
+      "artist": "Ariana Grande",
+      "year": null,
+      "start": 43.0,
+      "nfnStart": 45.1,
+      "categories": [],
+      "clips": [
+        "songs/ariana-grande-thank-u-next-official-lyric-video/1.mp3",
+        "songs/ariana-grande-thank-u-next-official-lyric-video/2.mp3",
+        "songs/ariana-grande-thank-u-next-official-lyric-video/3.mp3",
+        "songs/ariana-grande-thank-u-next-official-lyric-video/4.mp3",
+        "songs/ariana-grande-thank-u-next-official-lyric-video/5.mp3"
+      ],
+      "nfn": "songs/ariana-grande-thank-u-next-official-lyric-video/nfn.mp3"
+    },
+    {
+      "id": "billie-eilish-bad-guy-lyrics",
+      "title": "bad guy (Lyrics)",
+      "artist": "Billie Eilish",
+      "year": null,
+      "start": 73.1,
+      "nfnStart": 0.0,
+      "categories": [],
+      "clips": [
+        "songs/billie-eilish-bad-guy-lyrics/1.mp3",
+        "songs/billie-eilish-bad-guy-lyrics/2.mp3",
+        "songs/billie-eilish-bad-guy-lyrics/3.mp3",
+        "songs/billie-eilish-bad-guy-lyrics/4.mp3",
+        "songs/billie-eilish-bad-guy-lyrics/5.mp3"
+      ],
+      "nfn": "songs/billie-eilish-bad-guy-lyrics/nfn.mp3"
+    },
+    {
+      "id": "born-this-way-lady-gaga-lyrics",
+      "title": "Lady Gaga (Lyrics) 🎵",
+      "artist": "Born This Way",
+      "year": null,
+      "start": 130.5,
+      "nfnStart": 128.9,
+      "categories": [],
+      "clips": [
+        "songs/born-this-way-lady-gaga-lyrics/1.mp3",
+        "songs/born-this-way-lady-gaga-lyrics/2.mp3",
+        "songs/born-this-way-lady-gaga-lyrics/3.mp3",
+        "songs/born-this-way-lady-gaga-lyrics/4.mp3",
+        "songs/born-this-way-lady-gaga-lyrics/5.mp3"
+      ],
+      "nfn": "songs/born-this-way-lady-gaga-lyrics/nfn.mp3"
+    },
+    {
+      "id": "cardi-b-bad-bunny-j-balvin-i-like-it-lyrics",
+      "title": "I Like It (Lyrics)",
+      "artist": "Cardi B, Bad Bunny & J Balvin",
+      "year": null,
+      "start": 6.1,
+      "nfnStart": 6.95,
+      "categories": [],
+      "clips": [
+        "songs/cardi-b-bad-bunny-j-balvin-i-like-it-lyrics/1.mp3",
+        "songs/cardi-b-bad-bunny-j-balvin-i-like-it-lyrics/2.mp3",
+        "songs/cardi-b-bad-bunny-j-balvin-i-like-it-lyrics/3.mp3",
+        "songs/cardi-b-bad-bunny-j-balvin-i-like-it-lyrics/4.mp3",
+        "songs/cardi-b-bad-bunny-j-balvin-i-like-it-lyrics/5.mp3"
+      ],
+      "nfn": "songs/cardi-b-bad-bunny-j-balvin-i-like-it-lyrics/nfn.mp3"
+    },
+    {
+      "id": "daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers",
+      "title": "Get Lucky (Lyrics) ft. Pharrell Williams, Nile Rodgers",
+      "artist": "Daft Punk",
+      "year": null,
+      "start": 31.6,
+      "nfnStart": 0.15,
+      "categories": [],
+      "clips": [
+        "songs/daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers/1.mp3",
+        "songs/daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers/2.mp3",
+        "songs/daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers/3.mp3",
+        "songs/daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers/4.mp3",
+        "songs/daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers/5.mp3"
+      ],
+      "nfn": "songs/daft-punk-get-lucky-lyrics-ft-pharrell-williams-nile-rodgers/nfn.mp3"
+    },
+    {
+      "id": "drake-nice-for-what-lyrics",
+      "title": "Nice For What (Lyrics)",
+      "artist": "Drake",
+      "year": null,
+      "start": 45.1,
+      "nfnStart": 44.95,
+      "categories": [],
+      "clips": [
+        "songs/drake-nice-for-what-lyrics/1.mp3",
+        "songs/drake-nice-for-what-lyrics/2.mp3",
+        "songs/drake-nice-for-what-lyrics/3.mp3",
+        "songs/drake-nice-for-what-lyrics/4.mp3",
+        "songs/drake-nice-for-what-lyrics/5.mp3"
+      ],
+      "nfn": "songs/drake-nice-for-what-lyrics/nfn.mp3"
+    },
+    {
+      "id": "ellie-goulding-lights-lyrics",
+      "title": "Lights (Lyrics)",
+      "artist": "Ellie Goulding",
+      "year": null,
+      "start": 44.0,
+      "nfnStart": 45.1,
+      "categories": [],
+      "clips": [
+        "songs/ellie-goulding-lights-lyrics/1.mp3",
+        "songs/ellie-goulding-lights-lyrics/2.mp3",
+        "songs/ellie-goulding-lights-lyrics/3.mp3",
+        "songs/ellie-goulding-lights-lyrics/4.mp3",
+        "songs/ellie-goulding-lights-lyrics/5.mp3"
+      ],
+      "nfn": "songs/ellie-goulding-lights-lyrics/nfn.mp3"
+    },
+    {
+      "id": "fun-we-are-young-feat-janelle-monae-lyrics",
+      "title": "We Are Young (feat. Janelle Monae)  Lyrics",
+      "artist": "fun.",
+      "year": null,
+      "start": 42.0,
+      "nfnStart": 44.15,
+      "categories": [],
+      "clips": [
+        "songs/fun-we-are-young-feat-janelle-monae-lyrics/1.mp3",
+        "songs/fun-we-are-young-feat-janelle-monae-lyrics/2.mp3",
+        "songs/fun-we-are-young-feat-janelle-monae-lyrics/3.mp3",
+        "songs/fun-we-are-young-feat-janelle-monae-lyrics/4.mp3",
+        "songs/fun-we-are-young-feat-janelle-monae-lyrics/5.mp3"
+      ],
+      "nfn": "songs/fun-we-are-young-feat-janelle-monae-lyrics/nfn.mp3"
+    },
+    {
+      "id": "harry-styles-sign-of-the-times-lyrics",
+      "title": "Sign of the Times (Lyrics)",
+      "artist": "Harry Styles",
+      "year": null,
+      "start": 48.1,
+      "nfnStart": 48.55,
+      "categories": [],
+      "clips": [
+        "songs/harry-styles-sign-of-the-times-lyrics/1.mp3",
+        "songs/harry-styles-sign-of-the-times-lyrics/2.mp3",
+        "songs/harry-styles-sign-of-the-times-lyrics/3.mp3",
+        "songs/harry-styles-sign-of-the-times-lyrics/4.mp3",
+        "songs/harry-styles-sign-of-the-times-lyrics/5.mp3"
+      ],
+      "nfn": "songs/harry-styles-sign-of-the-times-lyrics/nfn.mp3"
+    },
+    {
+      "id": "hozier-take-me-to-church-lyrics",
+      "title": "Take Me To Church (Lyrics)",
+      "artist": "Hozier",
+      "year": null,
+      "start": 48.1,
+      "nfnStart": 47.7,
+      "categories": [],
+      "clips": [
+        "songs/hozier-take-me-to-church-lyrics/1.mp3",
+        "songs/hozier-take-me-to-church-lyrics/2.mp3",
+        "songs/hozier-take-me-to-church-lyrics/3.mp3",
+        "songs/hozier-take-me-to-church-lyrics/4.mp3",
+        "songs/hozier-take-me-to-church-lyrics/5.mp3"
+      ],
+      "nfn": "songs/hozier-take-me-to-church-lyrics/nfn.mp3"
+    },
+    {
+      "id": "kanye-west-runaway-lyrics-ft-pusha-t",
+      "title": "Runaway (Lyrics) ft. Pusha T",
+      "artist": "Kanye West",
+      "year": null,
+      "start": 28.6,
+      "nfnStart": 28.85,
+      "categories": [],
+      "clips": [
+        "songs/kanye-west-runaway-lyrics-ft-pusha-t/1.mp3",
+        "songs/kanye-west-runaway-lyrics-ft-pusha-t/2.mp3",
+        "songs/kanye-west-runaway-lyrics-ft-pusha-t/3.mp3",
+        "songs/kanye-west-runaway-lyrics-ft-pusha-t/4.mp3",
+        "songs/kanye-west-runaway-lyrics-ft-pusha-t/5.mp3"
+      ],
+      "nfn": "songs/kanye-west-runaway-lyrics-ft-pusha-t/nfn.mp3"
+    },
+    {
+      "id": "katy-perry-roar",
+      "title": "Roar",
+      "artist": "Katy Perry",
+      "year": null,
+      "start": 101.2,
+      "nfnStart": 103.2,
+      "categories": [],
+      "clips": [
+        "songs/katy-perry-roar/1.mp3",
+        "songs/katy-perry-roar/2.mp3",
+        "songs/katy-perry-roar/3.mp3",
+        "songs/katy-perry-roar/4.mp3",
+        "songs/katy-perry-roar/5.mp3"
+      ],
+      "nfn": "songs/katy-perry-roar/nfn.mp3"
+    },
+    {
+      "id": "kesha-die-young-lyrics",
+      "title": "Die Young (Lyrics)",
+      "artist": "Kesha",
+      "year": null,
+      "start": 32.0,
+      "nfnStart": 32.05,
+      "categories": [],
+      "clips": [
+        "songs/kesha-die-young-lyrics/1.mp3",
+        "songs/kesha-die-young-lyrics/2.mp3",
+        "songs/kesha-die-young-lyrics/3.mp3",
+        "songs/kesha-die-young-lyrics/4.mp3",
+        "songs/kesha-die-young-lyrics/5.mp3"
+      ],
+      "nfn": "songs/kesha-die-young-lyrics/nfn.mp3"
+    },
+    {
+      "id": "lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video",
+      "title": "Shallow (from A Star Is Born) (Official Music Video)",
+      "artist": "Lady Gaga, Bradley Cooper",
+      "year": null,
+      "start": 68.7,
+      "nfnStart": 70.85,
+      "categories": [],
+      "clips": [
+        "songs/lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video/1.mp3",
+        "songs/lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video/2.mp3",
+        "songs/lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video/3.mp3",
+        "songs/lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video/4.mp3",
+        "songs/lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video/5.mp3"
+      ],
+      "nfn": "songs/lady-gaga-bradley-cooper-shallow-from-a-star-is-born-official-music-video/nfn.mp3"
+    },
+    {
+      "id": "lorde-royals-lyrics",
+      "title": "Royals (Lyrics)",
+      "artist": "Lorde",
+      "year": null,
+      "start": 45.0,
+      "nfnStart": 0.0,
+      "categories": [],
+      "clips": [
+        "songs/lorde-royals-lyrics/1.mp3",
+        "songs/lorde-royals-lyrics/2.mp3",
+        "songs/lorde-royals-lyrics/3.mp3",
+        "songs/lorde-royals-lyrics/4.mp3",
+        "songs/lorde-royals-lyrics/5.mp3"
+      ],
+      "nfn": "songs/lorde-royals-lyrics/nfn.mp3"
+    },
+    {
+      "id": "macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton",
+      "title": "Can_t Hold Us (Lyrics) ft. Ray Dalton",
+      "artist": "Macklemore & Ryan Lewis",
+      "year": null,
+      "start": 43.0,
+      "nfnStart": 42.75,
+      "categories": [],
+      "clips": [
+        "songs/macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton/1.mp3",
+        "songs/macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton/2.mp3",
+        "songs/macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton/3.mp3",
+        "songs/macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton/4.mp3",
+        "songs/macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton/5.mp3"
+      ],
+      "nfn": "songs/macklemore-ryan-lewis-can-t-hold-us-lyrics-ft-ray-dalton/nfn.mp3"
+    },
+    {
+      "id": "macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz",
+      "title": "THRIFT SHOP (Lyrics) FEAT. WANZ",
+      "artist": "MACKLEMORE & RYAN LEWIS",
+      "year": null,
+      "start": 126.5,
+      "nfnStart": 129.05,
+      "categories": [],
+      "clips": [
+        "songs/macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz/1.mp3",
+        "songs/macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz/2.mp3",
+        "songs/macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz/3.mp3",
+        "songs/macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz/4.mp3",
+        "songs/macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz/5.mp3"
+      ],
+      "nfn": "songs/macklemore-ryan-lewis-thrift-shop-lyrics-feat-wanz/nfn.mp3"
+    },
+    {
+      "id": "mark-ronson-uptown-funk-official-video-ft-bruno-mars",
+      "title": "Uptown Funk (Official Video) ft. Bruno Mars",
+      "artist": "Mark Ronson",
+      "year": null,
+      "start": 90.0,
+      "nfnStart": 89.0,
+      "categories": [],
+      "clips": [
+        "songs/mark-ronson-uptown-funk-official-video-ft-bruno-mars/1.mp3",
+        "songs/mark-ronson-uptown-funk-official-video-ft-bruno-mars/2.mp3",
+        "songs/mark-ronson-uptown-funk-official-video-ft-bruno-mars/3.mp3",
+        "songs/mark-ronson-uptown-funk-official-video-ft-bruno-mars/4.mp3",
+        "songs/mark-ronson-uptown-funk-official-video-ft-bruno-mars/5.mp3"
+      ],
+      "nfn": "songs/mark-ronson-uptown-funk-official-video-ft-bruno-mars/nfn.mp3"
+    },
+    {
+      "id": "onerepublic-counting-stars-lyrics",
+      "title": "Counting Stars (Lyrics)",
+      "artist": "OneRepublic",
+      "year": null,
+      "start": 165.1,
+      "nfnStart": 163.7,
+      "categories": [],
+      "clips": [
+        "songs/onerepublic-counting-stars-lyrics/1.mp3",
+        "songs/onerepublic-counting-stars-lyrics/2.mp3",
+        "songs/onerepublic-counting-stars-lyrics/3.mp3",
+        "songs/onerepublic-counting-stars-lyrics/4.mp3",
+        "songs/onerepublic-counting-stars-lyrics/5.mp3"
+      ],
+      "nfn": "songs/onerepublic-counting-stars-lyrics/nfn.mp3"
+    },
+    {
+      "id": "post-malone-circles-lyrics",
+      "title": "Circles (Lyrics)",
+      "artist": "Post Malone",
+      "year": null,
+      "start": 61.1,
+      "nfnStart": 62.35,
+      "categories": [],
+      "clips": [
+        "songs/post-malone-circles-lyrics/1.mp3",
+        "songs/post-malone-circles-lyrics/2.mp3",
+        "songs/post-malone-circles-lyrics/3.mp3",
+        "songs/post-malone-circles-lyrics/4.mp3",
+        "songs/post-malone-circles-lyrics/5.mp3"
+      ],
+      "nfn": "songs/post-malone-circles-lyrics/nfn.mp3"
+    },
+    {
+      "id": "problem-ariana-grande-feat-iggy-azalea-lyrics",
+      "title": "Ariana Grande (Feat. Iggy Azalea) (Lyrics) 🎵",
+      "artist": "Problem",
+      "year": null,
+      "start": 165.0,
+      "nfnStart": 165.5,
+      "categories": [],
+      "clips": [
+        "songs/problem-ariana-grande-feat-iggy-azalea-lyrics/1.mp3",
+        "songs/problem-ariana-grande-feat-iggy-azalea-lyrics/2.mp3",
+        "songs/problem-ariana-grande-feat-iggy-azalea-lyrics/3.mp3",
+        "songs/problem-ariana-grande-feat-iggy-azalea-lyrics/4.mp3",
+        "songs/problem-ariana-grande-feat-iggy-azalea-lyrics/5.mp3"
+      ],
+      "nfn": "songs/problem-ariana-grande-feat-iggy-azalea-lyrics/nfn.mp3"
+    },
+    {
+      "id": "rihanna-we-found-love-ft-calvin-harris",
+      "title": "We Found Love ft. Calvin Harris",
+      "artist": "Rihanna",
+      "year": null,
+      "start": 87.1,
+      "nfnStart": 85.05,
+      "categories": [],
+      "clips": [
+        "songs/rihanna-we-found-love-ft-calvin-harris/1.mp3",
+        "songs/rihanna-we-found-love-ft-calvin-harris/2.mp3",
+        "songs/rihanna-we-found-love-ft-calvin-harris/3.mp3",
+        "songs/rihanna-we-found-love-ft-calvin-harris/4.mp3",
+        "songs/rihanna-we-found-love-ft-calvin-harris/5.mp3"
+      ],
+      "nfn": "songs/rihanna-we-found-love-ft-calvin-harris/nfn.mp3"
+    },
+    {
+      "id": "robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her",
+      "title": "Dancing On My Own (Lyrics) I_m in the corner watching you kiss her",
+      "artist": "Robyn",
+      "year": null,
+      "start": 82.0,
+      "nfnStart": 0.4,
+      "categories": [],
+      "clips": [
+        "songs/robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her/1.mp3",
+        "songs/robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her/2.mp3",
+        "songs/robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her/3.mp3",
+        "songs/robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her/4.mp3",
+        "songs/robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her/5.mp3"
+      ],
+      "nfn": "songs/robyn-dancing-on-my-own-lyrics-i-m-in-the-corner-watching-you-kiss-her/nfn.mp3"
+    },
+    {
+      "id": "taio-cruz-dynamite-lyrics",
+      "title": "Dynamite (Lyrics)",
+      "artist": "Taio Cruz",
+      "year": null,
+      "start": 31.0,
+      "nfnStart": 31.1,
+      "categories": [],
+      "clips": [
+        "songs/taio-cruz-dynamite-lyrics/1.mp3",
+        "songs/taio-cruz-dynamite-lyrics/2.mp3",
+        "songs/taio-cruz-dynamite-lyrics/3.mp3",
+        "songs/taio-cruz-dynamite-lyrics/4.mp3",
+        "songs/taio-cruz-dynamite-lyrics/5.mp3"
+      ],
+      "nfn": "songs/taio-cruz-dynamite-lyrics/nfn.mp3"
+    },
+    {
+      "id": "the-weeknd-blinding-lights-lyrics",
+      "title": "Blinding Lights (Lyrics)",
+      "artist": "The Weeknd",
+      "year": null,
+      "start": 60.1,
+      "nfnStart": 60.5,
+      "categories": [],
+      "clips": [
+        "songs/the-weeknd-blinding-lights-lyrics/1.mp3",
+        "songs/the-weeknd-blinding-lights-lyrics/2.mp3",
+        "songs/the-weeknd-blinding-lights-lyrics/3.mp3",
+        "songs/the-weeknd-blinding-lights-lyrics/4.mp3",
+        "songs/the-weeknd-blinding-lights-lyrics/5.mp3"
+      ],
+      "nfn": "songs/the-weeknd-blinding-lights-lyrics/nfn.mp3"
+    },
+    {
+      "id": "the-weeknd-starboy-lyrics-ft-daft-punk",
+      "title": "Starboy (Lyrics) ft. Daft Punk",
+      "artist": "The Weeknd",
+      "year": null,
+      "start": 45.0,
+      "nfnStart": 43.55,
+      "categories": [],
+      "clips": [
+        "songs/the-weeknd-starboy-lyrics-ft-daft-punk/1.mp3",
+        "songs/the-weeknd-starboy-lyrics-ft-daft-punk/2.mp3",
+        "songs/the-weeknd-starboy-lyrics-ft-daft-punk/3.mp3",
+        "songs/the-weeknd-starboy-lyrics-ft-daft-punk/4.mp3",
+        "songs/the-weeknd-starboy-lyrics-ft-daft-punk/5.mp3"
+      ],
+      "nfn": "songs/the-weeknd-starboy-lyrics-ft-daft-punk/nfn.mp3"
+    },
+    {
+      "id": "travis-scott-sicko-mode-lyrics-ft-drake",
+      "title": "SICKO MODE (Lyrics) ft. Drake",
+      "artist": "Travis Scott",
+      "year": null,
+      "start": 48.1,
+      "nfnStart": 47.4,
+      "categories": [],
+      "clips": [
+        "songs/travis-scott-sicko-mode-lyrics-ft-drake/1.mp3",
+        "songs/travis-scott-sicko-mode-lyrics-ft-drake/2.mp3",
+        "songs/travis-scott-sicko-mode-lyrics-ft-drake/3.mp3",
+        "songs/travis-scott-sicko-mode-lyrics-ft-drake/4.mp3",
+        "songs/travis-scott-sicko-mode-lyrics-ft-drake/5.mp3"
+      ],
+      "nfn": "songs/travis-scott-sicko-mode-lyrics-ft-drake/nfn.mp3"
+    },
+    {
+      "id": "twenty-one-pilots-stressed-out-lyrics",
+      "title": "Stressed Out (Lyrics)",
+      "artist": "Twenty One Pilots",
+      "year": null,
+      "start": 41.1,
+      "nfnStart": 0.3,
+      "categories": [],
+      "clips": [
+        "songs/twenty-one-pilots-stressed-out-lyrics/1.mp3",
+        "songs/twenty-one-pilots-stressed-out-lyrics/2.mp3",
+        "songs/twenty-one-pilots-stressed-out-lyrics/3.mp3",
+        "songs/twenty-one-pilots-stressed-out-lyrics/4.mp3",
+        "songs/twenty-one-pilots-stressed-out-lyrics/5.mp3"
+      ],
+      "nfn": "songs/twenty-one-pilots-stressed-out-lyrics/nfn.mp3"
     }
   ],
   "decoys": []
